@@ -43,11 +43,11 @@ Preferred communication style: Simple, everyday language.
 
 The application uses a component-based architecture with modular UI elements:
 
-- **Main Application (`app.py`)**: Orchestrates data fetching, caching, and component rendering with auto-refresh every 10 minutes
-- **Component System**: Isolated rendering modules for thermometer gauge, hot tokens ticker, metrics cards, and methodology panel
-- **Styling Strategy**: Custom CSS (`assets/styles.css`) with DefiLlama-inspired dark theme, overriding Streamlit defaults for professional appearance
+- **Main Application (`app.py`)**: Orchestrates data fetching, caching, and component rendering with auto-refresh every 10 minutes. Implements toast notifications for score updates and dual-timestamp refresh controls.
+- **Component System**: Isolated rendering modules for asymmetric thermometer gauge, horizontal top movers, professional metrics cards, and About modal
+- **Styling Strategy**: Custom CSS (`assets/styles.css`) with DefiLlama-inspired dark theme using system fonts (-apple-system, Segoe UI), tight spacing (1.5rem gaps), and zero decorative animations for institutional aesthetic
 
-**Design Pattern:** Single-page dashboard with collapsible methodology section, optimized for wide layout (1400px max width)
+**Design Pattern:** Single-page dashboard with asymmetric hero layout (gauge 40% / status 60%), optimized for wide layout (1400px max width), professional typography scale (48/32/16/13px)
 
 ### Backend Architecture
 
@@ -65,12 +65,20 @@ The application uses a component-based architecture with modular UI elements:
    - Implements weighted multi-factor scoring model
    - Formula: `(Fear & Greed × 35%) + (BTC Momentum × 25%) + (Volume Health × 20%) + (Market Breadth × 20%)`
    - Contains business logic for momentum normalization based on 24h price change thresholds
-   - Maintains historical tracking lists for volumes and BTC prices (prepared for future MA calculations)
+   - Integrates with score persistence layer to save every calculation to `score_history.json`
 
-3. **Caching Strategy**:
+3. **Score History Persistence (`data/score_history.py`)**:
+   - JSON-based persistence system storing risk scores with timestamps
+   - Maintains 90-day rolling history with automatic cleanup
+   - Provides historical value retrieval (Now/Yesterday/Last week/Last month)
+   - Powers historical values display in thermometer status panel
+   - File location: `data/score_history.json`
+
+4. **Caching Strategy**:
    - Streamlit's `@st.cache_data` decorator with TTL=600s for CSS and data functions
    - `@st.cache_resource` for singleton instances (fetcher, calculator)
    - Prevents redundant API calls and expensive recalculations on reruns
+   - Score stability ensured through cache TTL + JSON persistence
 
 **Configuration Management (`utils/config.py`):**
 - Centralized constants for API endpoints, timeouts, weights, color palette
@@ -88,14 +96,22 @@ The application uses a component-based architecture with modular UI elements:
 
 ### Visualization Strategy
 
-**Thermometer Component:** Plotly `go.Indicator` gauge with:
-- Semicircular display (0-100 range)
-- Dynamic color mapping based on score thresholds
-- Large number display with status emoji and descriptive message
+**Thermometer Component (Asymmetric Layout):** 
+- LEFT (40%): Plotly `go.Indicator` gauge with semicircular display (0-100 range), dynamic color mapping
+- RIGHT (60%): Status panel with large score number (48px), status text (32px), message (16px), last updated timestamp, and Historical Values section showing Now/Yesterday/Last week/Last month with colored badges
 
-**Metrics Dashboard:** 4-card grid layout using custom CSS cards with hover effects, displaying Fear & Greed, BTC trend, volume, and dominance metrics
+**Metrics Cards (Professional):** 4-card layout with tight spacing (gap="medium" = 1rem):
+- BTC Dominance (%)
+- Total Market Cap ($)
+- Altcoin Season Index (% of top 50 coins outperforming BTC in 24h)
+- 24H Volume ($)
+- Each card: uppercase label (13px gray), main number (32px white), delta (16px green/red), no charts
 
-**Hot Tokens Ticker:** HTML/CSS infinite scroll animation with duplicated content for seamless looping
+**Top Movers (Horizontal Single Row):** 
+- Header with "TOP MOVERS" label + timeframe selector (24H ▼ | 7D | 30D)
+- Single line display: Top 3 gainers + top 3 losers
+- Format: BTC +3.2% | ETH +1.8% | SOL +5.4% ● ADA -2.1% | DOT -1.5%
+- Green for positive, red for negative, bullet separator between sections
 
 ## External Dependencies
 
@@ -125,19 +141,60 @@ The application uses a component-based architecture with modular UI elements:
 
 ### Data Storage
 
-**Current Implementation:** In-memory caching only (no persistent database)
+**Current Implementation:** Hybrid approach
 
-**Note:** Repository references SQLite (`cache.db` in project structure documentation) but actual implementation uses Streamlit's built-in caching decorators. If persistent caching is required, Drizzle ORM integration would need to be added with appropriate database provider (Postgres, SQLite, etc.).
+1. **In-Memory Caching:** Streamlit's built-in `@st.cache_data` decorators for API responses (10-min TTL)
+2. **Score History Persistence:** JSON file (`data/score_history.json`) storing risk scores with 90-day retention
+   - Enables historical comparison (Now vs Yesterday vs Last week vs Last month)
+   - Survives app restarts and deployments
+   - Lightweight, version-controllable, no database required
+
+**Note:** For production scale with thousands of daily data points, consider migrating score_history.json to PostgreSQL/SQLite with Drizzle ORM.
 
 ### Design Assets
 
 - Custom CSS theme inspired by DefiLlama's dark mode aesthetic
 - Color palette optimized for financial data visualization (reds for bearish, greens for bullish)
-- Google Fonts or system font stack (not explicitly defined in current CSS)
+- **System Font Stack:** `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif` for institutional aesthetic (zero latency, native feel on macOS/Windows)
+- **Typography Scale:** 48px (hero score) / 32px (status) / 16px (body) / 13px (labels)
+- **Spacing System:** Tight layout with 1.5rem section gaps, 1rem card gaps, 2rem before footer
+- **Professional UI:** No hover animations, flat borders (1px solid #30363d), minimal decorative elements
 
 ### Deployment Considerations
 
 - **Platform:** Designed for Replit, Streamlit Cloud, or any Python hosting supporting background refresh
 - **Environment Variables:** No API keys currently required (using free/public endpoints)
-- **Resource Requirements:** Minimal - mostly stateless with 10-minute refresh cycle
+- **Resource Requirements:** Minimal - mostly stateless with 10-minute refresh cycle + lightweight JSON persistence
 - **Logging:** Python's built-in `logging` module with INFO level for API tracking
+- **User Feedback:** Toast notifications on score updates (auto-refresh only, not manual refresh)
+
+## Recent Changes (v2.0 - Professional Redesign)
+
+### November 10, 2025
+
+**Major UI/UX Overhaul:**
+- ✅ Asymmetric hero layout (gauge left 40%, status + history right 60%)
+- ✅ Score history persistence system with JSON storage (90-day retention)
+- ✅ Historical values display (Now/Yesterday/Last week/Last month) with colored badges
+- ✅ System font stack for institutional aesthetic (SF Pro/Segoe UI)
+- ✅ Tight spacing layout matching DefiLlama density (1.5rem/1rem gaps)
+- ✅ Professional metrics cards: BTC Dom, Market Cap, Altcoin Season Index, Volume
+- ✅ Horizontal top movers (top 3 gainers + losers in single row)
+- ✅ Toast notifications on score updates
+- ✅ Dual-timestamp refresh controls ("Last updated" + "Next update in")
+- ✅ About modal with professional copy (removed "Portfolio demonstration" language)
+- ✅ Removed ALL synthetic/fake data (BTC momentum chart, volume trend, market breadth)
+- ✅ Removed decorative emojis from UI (kept only in gauge result)
+- ✅ Removed hover animations on cards for flat, professional feel
+
+**Technical Improvements:**
+- Added `data/score_history.py` module for persistent score tracking
+- Integrated score persistence in calculator with graceful error handling
+- Deleted `components/mini_charts.py` (synthetic data violates project integrity)
+- Typography scale standardized to 48/32/16/13px
+- Card spacing reduced from gap="large" (2rem) to gap="medium" (1rem)
+
+**Design Philosophy:**
+- **Zero synthetic data:** If real data unavailable, remove feature entirely
+- **DefiLlama-grade professionalism:** Asymmetric layouts, system fonts, tight spacing
+- **Portfolio demonstration:** Dashboard showcases advanced Streamlit skills, multi-source API integration, data persistence, and product thinking
