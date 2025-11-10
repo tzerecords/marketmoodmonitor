@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 from utils.config import RISK_SCORE_WEIGHTS, RISK_SCORE_THRESHOLDS
 from utils.helpers import normalize_to_100
+from data.score_history import save_score
 
 logger = logging.getLogger(__name__)
 
@@ -169,6 +170,12 @@ class RiskScoreCalculator:
             }
             
             logger.info(f"Risk Score calculated: {risk_score:.1f} - Status: {status_info['status']}")
+            
+            # Persist score to history
+            try:
+                save_score(result["score"], result["status"], result["message"])
+            except Exception as e:
+                logger.warning(f"Failed to save score history: {e}")
             
             return result
             
