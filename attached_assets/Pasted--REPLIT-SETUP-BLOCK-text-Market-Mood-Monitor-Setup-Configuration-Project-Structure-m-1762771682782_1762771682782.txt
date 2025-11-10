@@ -1,0 +1,788 @@
+📁📁 REPLIT SETUP BLOCK
+
+text
+# Market Mood Monitor - Setup & Configuration
+
+## Project Structure
+
+market-mood-monitor/
+├── app.py # Streamlit main application
+├── components/
+│ ├── thermometer.py # Risk score gauge component
+│ ├── hot_tokens.py # Ticker carousel
+│ ├── metrics_cards.py # 4-card dashboard
+│ └── methodology.py # Footer explanation panel
+├── data/
+│ ├── fetcher.py # API calls to CoinGecko & Alternative.me
+│ ├── calculator.py # Risk score formula logic
+│ └── cache.py # SQLite caching layer
+├── utils/
+│ ├── config.py # Constants & settings
+│ └── helpers.py # Utility functions
+├── assets/
+│ └── styles.css # Custom CSS (DefiLlama-inspired)
+├── cache.db # SQLite database (auto-generated)
+├── requirements.txt
+├── .env.example # API keys template (if needed)
+└── README.md
+
+text
+
+---
+
+## Code Standards
+
+### Python
+- **Version**: 3.10+
+- **Style**: PEP 8 compliant, Black formatter
+- **Type hints**: Required for all functions
+- **Docstrings**: Google style for all public functions
+- **Error handling**: Try/except with logging, never silent failures
+
+### Example
+
+def calculate_risk_score(
+fear_greed: float,
+btc_momentum: float,
+volume_health: float,
+market_breadth: float
+) -> dict:
+"""
+Calculates Market Mood risk score using weighted multi-factor model.
+
+text
+Args:
+    fear_greed: Fear & Greed Index value (0-100)
+    btc_momentum: BTC momentum indicator (0-100)
+    volume_health: Volume health metric (0-100)
+    market_breadth: Market breadth percentage (0-100)
+
+Returns:
+    dict: {
+        'score': float (0-100),
+        'status': str ('Risk On'/'Risk Off'/'Neutral'),
+        'color': str (hex color code),
+        'explanation': str (contextual message)
+    }
+"""
+# Implementation...
+
+text
+
+---
+
+## Architecture Decisions
+
+### Frontend Framework: Streamlit
+**Why:**
+- Rapid prototyping (hours, not days)
+- Python-native (no JS required)
+- Built-in components for metrics/charts
+- Easy deployment on Replit
+
+**Tradeoffs:**
+- Less flexible than React (acceptable for MVP)
+- Limited custom animations (mitigated with CSS)
+
+**Configuration:**
+
+st.set_page_config(
+page_title="Market Mood Monitor",
+page_icon="🌡️",
+layout="wide", # Full-width, no sidebar
+initial_sidebar_state="collapsed"
+)
+
+text
+
+### Data Strategy: Cache-First
+**Why:**
+- Avoid rate limits (CoinGecko: 30 calls/min)
+- Faster load times (no wait for API)
+- Resilience (fallback if API down)
+
+**Implementation:**
+
+Pseudo-logic
+
+def get_market_data():
+cache = load_from_sqlite()
+if cache.is_fresh(ttl=10*60): # 10 min TTL
+return cache.data
+else:
+fresh_data = fetch_from_apis()
+save_to_sqlite(fresh_data)
+return fresh_data
+
+text
+
+### Risk Score Formula: Multi-Factor Model
+**Weights Rationale:**
+- **Fear & Greed (35%)**: Most established sentiment metric
+- **BTC Momentum (25%)**: BTC drives market direction
+- **Volume Health (20%)**: Confirms conviction
+- **Market Breadth (20%)**: Ensures rally isn't isolated
+
+**Alternative considered**: Machine learning model
+- **Rejected**: Overly complex for MVP, less transparent to users
+
+---
+
+## Features Priority Matrix
+
+### Must-Have (MVP v1)
+- [x] Risk score thermometer with gauge visual
+- [x] Hot tokens ticker (>100M mcap, auto-scroll)
+- [x] 4 metrics cards (Fear&Greed, BTC, Volume, Dominance)
+- [x] Methodology explanation panel
+- [x] Auto-refresh every 10min + manual button
+- [x] Countdown timer display
+- [x] Responsive design (desktop + tablet)
+
+### Nice-to-Have (v2)
+- [ ] Historical risk score chart (30d)
+- [ ] Configurable alerts (email/webhook)
+- [ ] Multi-timeframe selector
+- [ ] Dark/light theme toggle
+- [ ] Export CSV functionality
+
+### Out of Scope
+- ❌ User authentication
+- ❌ Portfolio tracking
+- ❌ Trading execution
+- ❌ Mobile native app
+
+---
+
+## Design System
+
+### Color Palette (DefiLlama-inspired)
+
+/* Base */
+--bg-primary: #0d1117;
+--bg-secondary: #161b22;
+--border-color: #30363d;
+
+/* Typography */
+--text-primary: #ffffff;
+--text-secondary: #8b949e;
+--text-muted: #6e7681;
+
+/* Semantic */
+--success: #10b981;
+--warning: #eab308;
+--danger: #ef4444;
+--info: #3b82f6;
+
+/* Risk Score Gradient */
+--extreme-risk-off: #ef4444;
+--risk-off: #f97316;
+--neutral: #eab308;
+--risk-on: #10b981;
+--extreme-risk-on: #22c55e;
+
+text
+
+### Typography
+
+--font-family: 'Inter', 'Roboto', -apple-system, sans-serif;
+--font-size-xs: 12px;
+--font-size-sm: 14px;
+--font-size-base: 16px;
+--font-size-lg: 20px;
+--font-size-xl: 24px;
+--font-size-2xl: 32px;
+--font-size-3xl: 48px;
+
+text
+
+### Spacing
+
+--spacing-xs: 4px;
+--spacing-sm: 8px;
+--spacing-md: 16px;
+--spacing-lg: 24px;
+--spacing-xl: 32px;
+--spacing-2xl: 48px;
+
+text
+
+### Component Patterns
+
+**Card:**
+
+.metric-card {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: 8px;
+padding: var(--spacing-lg);
+transition: border-color 0.2s ease;
+}
+
+.metric-card:hover {
+border-color: var(--info);
+}
+
+text
+
+**Thermometer Gauge:**
+- Semi-circle SVG with gradient fill
+- Needle indicator with smooth rotation
+- Score number large and centered
+- Status text below (e.g., "Risk On Mode")
+
+---
+
+## API Integration
+
+### CoinGecko (Primary Data Source)
+**Endpoints:**
+
+BASE_URL = "https://api.coingecko.com/api/v3"
+Market overview
+
+GET /global
+Top gainers/losers
+
+GET /coins/markets?vs_currency=usd&order=percent_change_24h_desc&per_page=50
+BTC price & volume
+
+GET /simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true
+Market cap dominance
+
+GET /global (btc_market_cap_percentage, eth_market_cap_percentage)
+
+text
+
+**Rate Limits:**
+- Free tier: 30 calls/minute, 10,000 calls/month
+- Strategy: Batch calls, cache aggressively
+
+**Error Handling:**
+
+try:
+response = requests.get(url, timeout=10)
+response.raise_for_status()
+return response.json()
+except requests.exceptions.HTTPError as e:
+logger.error(f"API error: {e}")
+return load_from_cache() # Fallback
+except requests.exceptions.Timeout:
+logger.warning("API timeout, using cache")
+return load_from_cache()
+
+text
+
+### Alternative.me (Fear & Greed)
+**Endpoint:**
+
+GET https://api.alternative.me/fng/?limit=7 # Last 7 days
+
+text
+
+**Response:**
+
+{
+"data": [
+{"value": "29", "value_classification": "Fear", "timestamp": "1699574400"},
+...
+]
+}
+
+text
+
+**No rate limits** (public, free)
+
+---
+
+## Deployment
+
+### Replit Configuration
+
+.replit
+
+run = "streamlit run app.py --server.port 8080"
+entrypoint = "app.py"
+language = "python3"
+
+[nix]
+channel = "stable-22_11"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+text
+
+### Environment Variables
+
+.env (optional, for future paid APIs)
+
+COINGECKO_API_KEY="" # Not needed for free tier
+TELEGRAM_BOT_TOKEN="" # For alerts (v2)
+
+text
+
+### Requirements
+
+streamlit==1.28.0
+requests==2.31.0
+pandas==2.1.0
+plotly==5.17.0
+python-dateutil==2.8.2
+
+text
+
+### Pre-Deployment Checklist
+- [ ] Test API connections with sample calls
+- [ ] Verify cache.db creation and writes
+- [ ] Validate Risk Score calculation with mock data
+- [ ] UI responsive test (1920px, 1366px, 768px widths)
+- [ ] Rate limit check: Monitor console for API call count
+- [ ] Error states: Test with API endpoints returning errors
+- [ ] Loading states: Verify spinners show during fetch
+- [ ] README complete with screenshots and setup instructions
+
+---
+
+## Widget Embed Instructions
+
+### For Portfolio Website
+
+<!-- Full-width embed --> <iframe src="https://market-mood-monitor.<username>.repl.co" width="100%" height="900px" frameborder="0" style="border: 1px solid #30363d; border-radius: 8px;" loading="lazy"> </iframe> <!-- Compact embed (thermometer only) --> <iframe src="https://market-mood-monitor.<username>.repl.co?view=compact" width="100%" height="400px" frameborder="0"> </iframe> ```
+Embed Considerations
+
+    Performance: Lazy loading para no impactar página principal
+
+    Responsive: Widget se adapta al ancho del container
+
+    Isolation: CSS no interfiere con sitio padre
+
+    Security: CORS configurado para permitir embed
+
+Monitoring & Maintenance
+Logging Strategy
+
+text
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger(__name__)
+
+# Log all API calls
+logger.info(f"API call: {endpoint} - Status: {response.status_code}")
+
+# Log Risk Score calculations
+logger.info(f"Risk Score calculated: {score} - Status: {status}")
+
+Health Checks
+
+    Daily: Review Replit logs for API errors
+
+    Weekly: Verify API call count (should be <7,000/week)
+
+    Monthly: Check CoinGecko for API changes/deprecations
+
+Performance Targets
+
+    Initial load: <3 seconds
+
+    Auto-refresh: <1 second (from cache)
+
+    Manual refresh: <5 seconds (API fetch)
+
+Known Limitations
+
+    CoinGecko free tier: No historical intraday data (only daily)
+
+    ETF flows: Not directly available (proxy with volume for MVP)
+
+    Market breadth: Limited to top 100 coins (sufficient for MVP)
+
+Methodology Documentation (For UI Panel)
+Panel Content
+
+text
+## How Risk Score Works
+
+The Market Mood Monitor aggregates multiple signals into a single 0-100 score:
+
+**Formula:**
+Risk Score = (Fear & Greed × 35%) + (BTC Momentum × 25%) + 
+             (Volume Health × 20%) + (Market Breadth × 20%)
+
+**Components:**
+
+🧠 **Fear & Greed Index (35%)**
+Measures overall market sentiment based on volatility, volume, social media, surveys, and dominance metrics.
+Source: Alternative.me
+
+📈 **BTC Momentum (25%)**
+Tracks Bitcoin's short-term trend using Rate of Change (7d vs 30d moving average).
+Why: BTC typically leads the market.
+
+📊 **Volume Health (20%)**
+Compares current 24h volume to 7-day average.
+Why: High volume confirms price moves are sustainable.
+
+🌐 **Market Breadth (20%)**
+Percentage of top 100 cryptocurrencies with positive 24h performance.
+Why: Broad participation indicates healthier rallies.
+
+**Interpretation:**
+- 0-30: Extreme Risk Off (defensive positioning)
+- 31-60: Neutral (wait for clearer signals)
+- 61-100: Risk On (constructive for exposure)
+
+**Update Frequency:** Every 10 minutes | Manual refresh available
+
+**Data Sources:** CoinGecko API (prices, volume), Alternative.me (F&G Index)
+
+**Limitations:** Score reflects current state, not future prediction. Use as one input among many for investment decisions.
+
+README Template
+
+text
+# 🌡️ Market Mood Monitor
+
+> Real-time crypto market sentiment dashboard with Risk On/Risk Off thermometer
+
+
+
+## Overview
+
+Market Mood Monitor synthesizes multiple cryptocurrency market signals into a single, actionable Risk Score (0-100) that indicates whether current conditions favor aggressive or defensive positioning.
+
+**Live Demo:** [https://market-mood-monitor.yourname.repl.co](https://market-mood-monitor.yourname.repl.co)
+
+## Features
+
+- **🌡️ Risk Thermometer**: Visual gauge showing market risk appetite
+- **🔥 Hot Tokens Ticker**: Auto-scrolling top movers (>100M market cap)
+- **📊 Key Metrics Dashboard**: Fear & Greed, BTC trend, volume, dominance
+- **🔄 Auto-Refresh**: Updates every 10 minutes with countdown timer
+- **📖 Transparent Methodology**: Full explanation of score calculation
+
+## How It Works
+
+The Risk Score combines:
+- Fear & Greed Index (35%)
+- Bitcoin Momentum (25%)
+- Volume Health (20%)
+- Market Breadth (20%)
+
+Scores 0-30 indicate defensive conditions ("Risk Off"), while 61-100 suggest constructive conditions for exposure ("Risk On").
+
+## Tech Stack
+
+- **Frontend**: Streamlit with custom CSS
+- **Backend**: Python 3.10+
+- **APIs**: CoinGecko (market data), Alternative.me (Fear & Greed)
+- **Storage**: SQLite (caching layer)
+- **Deployment**: Replit
+
+## Local Development
+
+```bash
+# Clone repo
+git clone https://github.com/yourusername/market-mood-monitor
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run app
+streamlit run app.py
+
+Project Structure
+
+text
+├── app.py                 # Main Streamlit app
+├── components/            # UI components
+├── data/                  # API fetching & calculations
+├── assets/styles.css      # Custom styling
+└── README.md
+
+Skills Demonstrated
+
+    Business analysis (synthesizing multiple signals)
+
+    Product thinking (user-centric dashboard design)
+
+    Data engineering (API integration, caching)
+
+    Frontend development (responsive UI, visual design)
+
+Future Enhancements
+
+    Historical risk score chart (30-day trend)
+
+    Configurable alerts (email/Telegram)
+
+    Multi-timeframe analysis
+
+    Portfolio-specific risk metrics
+
+License
+
+MIT
+Contact
+
+[Your Name] - [your.email@example.com]
+Portfolio: [yourwebsite.com]
+
+text
+
+---
+
+## Final Prompt for Replit Agent
+
+Construye "Market Mood Monitor", un dashboard profesional de sentimiento crypto con termómetro Risk On/Risk Off.
+
+OBJETIVO:
+Dashboard que agrega Fear & Greed, BTC momentum, volumen y market breadth en un score 0-100 visual. Inspiración estética: DefiLlama + Alternative.me Fear & Greed Index.
+
+FUNCIONALIDAD CORE:
+
+    THERMOMETER GAUGE (Hero element)
+
+        Semicircle gauge estilo Alternative.me (ver referencia visual)
+
+        Score 0-100 con gradiente dinámico (rojo→amarillo→verde)
+
+        Número grande centrado + texto status ("Risk On Mode")
+
+        Mensaje contextual explicativo debajo
+
+    HOT TOKENS TICKER
+
+        Carousel horizontal auto-scroll infinito
+
+        Top 4 gainers + 4 losers (>100M market cap)
+
+        Formato: "🔥 ZEC +24.5% ● RENDER +18.2% ..."
+
+        Velocidad: 3 segundos por ciclo completo
+
+    METRICS CARDS (Grid 2×2)
+    Card A: Fear & Greed Index
+
+        Valor actual + mini gauge
+
+        Histórico 7d (línea mini)
+
+        Classification text (Fear/Greed)
+
+    Card B: BTC Trend
+
+        Precio + % change 24h
+
+        MA status (above/below)
+
+        Trend arrow visual
+
+    Card C: 24h Volume
+
+        Volume USD + % vs 7d avg
+
+        Bar chart comparativo
+
+    Card D: Market Dominance
+
+        BTC % y ETH %
+
+        Mini pie chart
+
+    METHODOLOGY PANEL (Footer expandible)
+
+        Fórmula explicada con pesos
+
+        Interpretación de thresholds
+
+        Fuentes de datos
+
+        Update frequency
+
+    AUTO-REFRESH SYSTEM
+
+        Background refresh cada 10 minutos
+
+        Countdown timer en header: "Next update in: 9m 32s"
+
+        Botón "Actualizar" con spinner feedback
+
+        Smart cache: reinicia timer si refresh manual
+
+CÁLCULO RISK SCORE:
+
+python
+score = (fear_greed * 0.35) + 
+        (btc_momentum * 0.25) + 
+        (volume_health * 0.20) + 
+        (market_breadth * 0.20)
+
+# Donde:
+# fear_greed: valor 0-100 de Alternative.me
+# btc_momentum: ROC(7d vs 30d MA) normalizado 0-100
+# volume_health: (vol_24h / avg_7d) * 100, cap 100
+# market_breadth: % top100 coins con price_change_24h > 0
+
+TECH STACK:
+
+    Streamlit (no sidebar: layout="wide", initial_sidebar_state="collapsed")
+
+    Python 3.10+ con type hints y docstrings
+
+    SQLite cache (TTL 10min)
+
+    APIs: CoinGecko (free), Alternative.me
+
+DESIGN SYSTEM (DefiLlama-style):
+
+css
+Background: #0d1117
+Cards: #161b22, border #30363d
+Primary: #3b82f6
+Success: #10b981
+Warning: #eab308
+Danger: #ef4444
+Font: Inter/Roboto, 14px base
+Border-radius: 8px
+Spacing: 24px sections
+
+ESTRUCTURA LAYOUT (no sidebar, full-width):
+
+text
+┌─────────────────────────────────────────────────┐
+│ 🌡️ MARKET MOOD MONITOR   [Update] [⏱ 9m 32s] │
+└─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│         MARKET PULSE THERMOMETER                │
+│                                                 │
+│    [═════════●════════]  (gauge semicircle)     │
+│   RISK OFF ←  NEUTRAL  → RISK ON                │
+│                                                 │
+│            Score: 67                            │
+│         🟢 RISK ON MODE                         │
+│                                                 │
+│ Market shows bullish momentum with strong       │
+│ institutional participation and healthy volume  │
+└─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│ 🔥 HOT TOKENS                                   │
+│ ZEC +24.5% ● RENDER +18.2% ● ARB +12.1% → ...  │
+└─────────────────────────────────────────────────┘
+
+┌───────────────┬───────────────┬───────────────┐
+│ Fear & Greed  │   BTC Trend   │  24h Volume   │
+│               │               │               │
+│     29        │  $43,250      │   $87.5B      │
+│   (Fear)      │  +3.2% ▲     │   +15.8%      │
+│ [mini gauge]  │ [MA status]   │ [bar chart]   │
+└───────────────┴───────────────┴───────────────┘
+┌───────────────────────────────────────────────┐
+│           Market Dominance                    │
+│  BTC 58.2%  ●  ETH 18.1%  [mini pie]         │
+└───────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│ 📖 METHODOLOGY [click to expand]                │
+│ Risk Score = Fear&Greed(35%) + BTC(25%) + ...  │
+└─────────────────────────────────────────────────┘
+
+INTEGRACIONES API:
+
+CoinGecko:
+
+python
+# Global market data
+GET /global
+
+# Top movers (>100M mcap)
+GET /coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100
+
+# BTC specific
+GET /simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true
+
+Alternative.me:
+
+python
+# Fear & Greed with history
+GET https://api.alternative.me/fng/?limit=7
+
+ERROR HANDLING:
+
+    Try/except con logging
+
+    Fallback a cache si API falla
+
+    User-friendly messages (no stack traces)
+
+    Loading spinners durante fetch
+
+VALIDACIONES:
+
+    Rate limit check: <150 calls/día
+
+    Data validation (handle nulls/missing)
+
+    Cache freshness verification
+
+    API response status checks
+
+DELIVERABLES:
+
+    app.py funcional con estructura modular
+
+    components/ folder (thermometer, ticker, cards, methodology)
+
+    data/ folder (fetcher, calculator, cache)
+
+    assets/styles.css completo
+
+    requirements.txt
+
+    README.md con screenshots y explicación
+
+CRITICAL REQUIREMENTS:
+
+    ✅ NO usar sidebar de Streamlit
+
+    ✅ Thermometer debe ser semicircle gauge (like Alternative.me)
+
+    ✅ Ticker debe auto-scroll horizontal infinito
+
+    ✅ Countdown timer visible en header
+
+    ✅ Methodology panel expandible/collapsible
+
+    ✅ Responsive (desktop + tablet mínimo)
+
+    ✅ Preparado para embed (CSS aislado)
+
+POWER TO VETO:
+
+    Si algo no tiene sentido técnicamente, propón alternativa
+
+    Si API tiene limitación no prevista, sugiere workaround
+
+    Si UX puede mejorarse, justifica cambio
+
+    Sé brutalmente honesto sobre feasibility
+
+CRITERIO ÉXITO:
+
+    Dashboard carga <3seg
+
+    Score se calcula sin errores con data real
+
+    UX clara para no-técnico en 30seg
+
+    Zero rate limit violations
+
+    Código modular y documentado

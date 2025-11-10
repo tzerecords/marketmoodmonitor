@@ -1,0 +1,324 @@
+📁 PROJECT BRIEF - Market Mood Monitor
+Executive Overview
+
+Market Mood Monitor es un dashboard analítico que sintetiza el sentimiento del mercado crypto en un único indicador visual: un termómetro Risk On/Risk Off. Diseñado para inversores, traders y analistas que necesitan tomar decisiones rápidas basadas en múltiples señales de mercado.
+
+El proyecto demuestra capacidades de business intelligence, data synthesis y product thinking mediante la transformación de datos complejos en insights accionables presentados con UX profesional.
+Business Problem
+
+Los traders e inversores crypto enfrentan sobrecarga de información: docenas de indicadores dispersos en múltiples plataformas. Necesitan una respuesta simple a la pregunta crítica: "¿Es momento de asumir riesgo o de proteger capital?"
+
+Market Mood Monitor resuelve esto agregando señales clave en un score único (0-100) que indica el estado del mercado, acompañado de contexto visual y explicaciones claras.
+Target Users
+
+Primary:
+
+    Crypto traders (retail e institucional) buscando visión macro rápida
+
+    Portfolio managers decidiendo asset allocation
+
+    Business analysts demostrando capacidad de síntesis de datos
+
+Secondary:
+
+    Recruiters evaluando portfolio técnico/analítico
+
+    Desarrolladores buscando inspiración para dashboards financieros
+
+Core Value Proposition
+
+"Del caos de datos a una decisión clara en 30 segundos"
+
+    Síntesis inteligente: 5 indicadores → 1 score comprensible
+
+    Contexto visual: Gauge + explicación → no solo números, sino significado
+
+    Actualidad: Datos frescos cada 10 minutos + refresh on-demand
+
+    Transparencia: Metodología visible → confianza en la señal
+
+Key Features
+1. Market Pulse Thermometer (Hero)
+
+Gauge semicircular estilo Fear & Greed que muestra score 0-100 con gradiente de color dinámico:
+
+​
+
+    0-30: Rojo (Extreme Risk Off) - "Protect capital mode"
+
+    31-45: Naranja (Risk Off) - "Cautious positioning"
+
+    46-60: Amarillo (Neutral) - "Wait for confirmation"
+
+    61-80: Verde claro (Risk On) - "Constructive conditions"
+
+    81-100: Verde brillante (Extreme Risk On) - "Maximum exposure justified"
+
+Incluye texto explicativo contextual: "Market shows strong bullish momentum with increasing institutional inflows"
+2. Hot Tokens Ticker
+
+Carousel horizontal automático mostrando los 8 tokens con >100M market cap que más se mueven (4 gainers + 4 losers):
+
+text
+🔥 TOP MOVERS: ZEC +24.5% ● RENDER +18.2% ● ARB +12.1% ... ● MATIC -8.3% ↻
+
+3. Key Metrics Dashboard
+
+Grid de 4 cards con indicadores esenciales:
+
+Fear & Greed Index
+
+    Valor actual + gauge mini
+
+    Histórico 7d con mini-chart
+
+    Clasificación textual (Fear/Greed)
+
+Bitcoin Trend
+
+    Precio actual + % change 24h
+
+    Moving Average cross status
+
+    Trend arrow (↑↓↔)
+
+24h Volume
+
+    Volumen market-wide
+
+    % change vs promedio 7d
+
+    Bar chart mini
+
+Market Dominance
+
+    BTC % y ETH %
+
+    Pie chart mini
+
+    Diversification indicator
+
+4. Methodology Panel
+
+Footer transparente explicando:
+
+    Fórmula del Risk Score (con pesos)
+
+    Fuentes de datos utilizadas
+
+    Frecuencia de actualización
+
+    Limitaciones conocidas
+
+Risk Score Methodology
+Formula
+
+text
+Risk Score = (Fear & Greed × 35%) + 
+             (BTC Momentum × 25%) + 
+             (Volume Health × 20%) + 
+             (Market Breadth × 20%)
+
+Components Explained
+
+Fear & Greed Index (35%)
+
+    Source: Alternative.me API
+
+    Rationale: Mejor proxy de sentimiento retail/institucional establecido en la industria
+
+    Calculation: Valor directo 0-100
+
+BTC Momentum (25%)
+
+    Calculation: Rate of Change (ROC) 7-day vs 30-day MA, normalizado 0-100
+
+    Rationale: Bitcoin lidera el mercado; su momentum predice dirección general
+
+    Interpretation: >60 = bullish, <40 = bearish
+
+Volume Health (20%)
+
+    Calculation: (Volume 24h / Average Volume 7d) × 100, capped at 100
+
+    Rationale: Volumen creciente con precio subiendo = convicción real (no pump artificial)
+
+    Interpretation: >80 = strong participation
+
+Market Breadth (20%)
+
+    Calculation: % de top 100 coins en green (precio 24h positivo)
+
+    Rationale: Rally broad-based es más sostenible que solo BTC pump
+
+    Interpretation: >60% = healthy breadth
+
+Decision Thresholds
+Score Range	Status	Action Implication
+0-30	Extreme Risk Off	Reduce exposure, move to stables
+31-45	Risk Off	Defensive positioning, wait for reversal
+46-60	Neutral	Monitor closely, no major moves
+61-80	Risk On	Constructive for adding exposure
+81-100	Extreme Risk On	Full allocation justified
+Design Philosophy
+
+Inspiration: DefiLlama + Alternative.me Fear & Greed
+
+​
+
+Principles:
+
+    Clarity over complexity: Un usuario debe entender el estado del mercado en 30 segundos
+
+    Transparency: Mostrar cómo se calcula todo (no caja negra)
+
+    Professionalism: Estética limpia, tipografía consistente, colores con propósito
+
+    Actionability: No solo datos, sino insights que guíen decisiones
+
+UX Priorities:
+
+    Visual hierarchy clara (Thermometer → Metrics → Methodology)
+
+    Color como señal semántica (rojo=cautela, verde=oportunidad)
+
+    White space generoso (no cluttered)
+
+    Tooltips explicativos en hover
+
+    Loading states suaves
+
+Data Sources & Refresh Strategy
+
+APIs:
+
+    CoinGecko (free tier): Precios, market cap, volumen, top gainers/losers
+
+    Alternative.me: Fear & Greed Index con histórico
+
+    Rate limits: 30 calls/min, 10,000 calls/mes (CoinGecko)
+
+Refresh Logic:
+
+    Auto-refresh: Cada 10 minutos (background fetch)
+
+    Manual button: "Actualizar ahora" con spinner feedback
+
+    Countdown timer: "Next update in: 9m 32s" (visible en header)
+
+    Smart caching: SQLite local con TTL, fallback en caso de API error
+
+Data Quality:
+
+    Validación de responses (handle null/missing data)
+
+    Fallback a cache si API falla
+
+    Error messages user-friendly (no stack traces)
+
+Success Metrics
+
+Technical:
+
+    Dashboard carga en <3 segundos
+
+    Zero API rate limit violations
+
+    99% uptime (sin crashes por API errors)
+
+User Experience:
+
+    Usuarios entienden Risk Score sin leer docs (tested with 3+ personas)
+
+    Tiempo promedio en dashboard: >2 minutos (engagement)
+
+    Feedback cualitativo: "útil para decisiones"
+
+Portfolio Impact:
+
+    Recruiters pasan >1 minuto evaluando el proyecto
+
+    Genera conversación en entrevistas técnicas
+
+    Demuestra 3 skills core: data analysis, product thinking, frontend polish
+
+Future Roadmap (v2)
+
+Phase 2 Features:
+
+    Historical risk score chart (últimos 30 días)
+
+    Alertas configurables (email/Telegram cuando score cruza threshold)
+
+    Multi-timeframe toggle (1h, 4h, 1d, 1w)
+
+    Comparador side-by-side de múltiples tokens
+
+    Export data to CSV para análisis propio
+
+Phase 3 (Scale):
+
+    User accounts con portfolios personalizados
+
+    Backtesting: "Si hubiera seguido Risk Score últimos 6 meses, ¿cuál ROI?"
+
+    Social: Compartir snapshot del dashboard en Twitter
+
+    Mobile app nativa
+
+Skills Demonstrated
+Business Analysis
+
+    Identificación de pain point real (información dispersa)
+
+    Síntesis de múltiples fuentes en insight único
+
+    Presentación clara para toma de decisiones
+
+Product Thinking
+
+    User-centric design (qué necesita un trader en 30 seg?)
+
+    Priorización features (MVP v1 vs nice-to-have)
+
+    Transparencia metodológica (build trust)
+
+Technical Execution
+
+    API integration con manejo robusto de errores
+
+    Performance optimization (caching, rate limits)
+
+    Frontend polish con UX profesional
+
+Communication
+
+    Documentación clara de decisiones
+
+    Leyendas explicativas integradas en UI
+
+    README y methodology panel para diferentes audiencias
+
+Showcase Strategy
+
+En Portfolio Website:
+
+    Embed como widget/iframe en sección "Projects"
+
+    Hero image: Screenshot del thermometer en Risk On state
+
+    Breve descripción (100 palabras) + link "Ver dashboard live"
+
+    Callout: "Synthesizes 5+ market signals into one actionable indicator"
+
+En LinkedIn/CV:
+
+    Bullet: "Built crypto market sentiment dashboard aggregating Fear & Greed, volume, and momentum indicators into Risk On/Off score (Python, Streamlit, CoinGecko API)"
+
+En Entrevistas:
+
+    Storytelling: "Los traders tienen 20 tabs abiertas... construí una solución que responde la pregunta crítica en 30 segundos"
+
+    Demo live: Mostrar actualización en tiempo real
+
+    Profundidad: Explicar decisiones de ponderación en fórmula (business rationale)
