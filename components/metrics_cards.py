@@ -7,28 +7,36 @@ from typing import Dict, Any
 from utils.helpers import format_large_number, format_percentage
 
 
-def _calculate_altcoin_season(top_movers: list, btc_change_24h: float) -> float:
+def _calculate_altcoin_season(top_movers: Dict[str, Any], btc_change_24h: float) -> float:
     """
     Calculate Altcoin Season Index: % of top 50 coins outperforming BTC.
     
     Args:
-        top_movers: List of coin data with price_change_24h
+        top_movers: Dict with 'gainers' and 'losers' lists
         btc_change_24h: Bitcoin 24h price change percentage
         
     Returns:
         Percentage of coins beating BTC (0-100)
     """
-    if not top_movers:
+    if not top_movers or not isinstance(top_movers, dict):
+        return 0.0
+    
+    # Combine gainers and losers into single list
+    gainers = top_movers.get("gainers", [])
+    losers = top_movers.get("losers", [])
+    all_coins = gainers + losers
+    
+    if not all_coins:
         return 0.0
     
     # Count coins with better performance than BTC
     outperforming = sum(
-        1 for coin in top_movers 
-        if coin.get('price_change_24h', -999) > btc_change_24h
+        1 for coin in all_coins 
+        if isinstance(coin, dict) and coin.get('price_change_24h', -999) > btc_change_24h
     )
     
     # Use min of actual count vs 50 for percentage
-    total = min(len(top_movers), 50)
+    total = min(len(all_coins), 50)
     return (outperforming / total * 100) if total > 0 else 0.0
 
 

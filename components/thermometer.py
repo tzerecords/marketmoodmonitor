@@ -121,7 +121,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: datetime = None)
             margin=dict(l=10, r=10, t=20, b=20)
         )
         
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
     
     # RIGHT: Status + Historical Values
     with col_status:
