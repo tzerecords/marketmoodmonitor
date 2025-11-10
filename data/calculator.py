@@ -207,20 +207,25 @@ class RiskScoreCalculator:
         )
     
     @staticmethod
-    def generate_synthetic_history(current_score: float, days: int = 7) -> List[Dict[str, Any]]:
+    def generate_synthetic_history(current_score: float, days: int = 7, seed: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         Generate realistic historical walk based on current score.
         Uses mean reversion to avoid unrealistic spikes.
+        Deterministic when seeded for cache consistency.
         
         For MVP v1.5 - Phase 2 will use PostgreSQL for real historical data.
         
         Args:
             current_score: Current risk score (0-100)
             days: Number of days to generate
+            seed: Random seed for deterministic output (use timestamp hash)
             
         Returns:
             List of {date, score} dicts for historical timeline
         """
+        if seed is not None:
+            random.seed(seed)
+        
         history = []
         score = current_score
         
@@ -241,4 +246,5 @@ class RiskScoreCalculator:
             'score': current_score
         })
         
+        random.seed()
         return history

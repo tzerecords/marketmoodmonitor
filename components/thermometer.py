@@ -102,11 +102,12 @@ def render_thermometer(risk_data: Dict[str, Any]):
     ))
     
     fig.update_layout(
-        paper_bgcolor="#0d1117",
-        plot_bgcolor="#0d1117",
+        paper_bgcolor="#111827",
+        plot_bgcolor="#111827",
         font={'color': "#ffffff", 'family': "Inter, sans-serif"},
-        height=350,
-        margin=dict(l=20, r=20, t=20, b=20)
+        height=260,
+        margin=dict(l=20, r=20, t=20, b=20),
+        transition={'duration': 500, 'easing': 'cubic-in-out'}
     )
     
     st.plotly_chart(fig, width='stretch')
@@ -125,5 +126,6 @@ def render_thermometer(risk_data: Dict[str, Any]):
         unsafe_allow_html=True
     )
     
-    historical_data = RiskScoreCalculator.generate_synthetic_history(score, days=7)
+    seed = int(score * 100)
+    historical_data = RiskScoreCalculator.generate_synthetic_history(score, days=7, seed=seed)
     render_historical_sparkline(historical_data)

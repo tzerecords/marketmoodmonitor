@@ -12,12 +12,13 @@ from data.calculator import RiskScoreCalculator
 from components.thermometer import render_thermometer
 from components.hot_tokens import render_hot_tokens
 from components.metrics_cards import render_metrics_dashboard
+from components.mini_charts import render_mini_charts_section
 from utils.config import REFRESH_INTERVAL_SECONDS, RISK_SCORE_WEIGHTS
 from utils.helpers import get_time_until_next_refresh
 
 st.set_page_config(
     page_title="Market Mood Monitor",
-    page_icon="🌡️",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -40,9 +41,11 @@ def get_calculator():
     """Get singleton instance of RiskScoreCalculator."""
     return RiskScoreCalculator()
 
+@st.cache_data(ttl=REFRESH_INTERVAL_SECONDS, show_spinner=False)
 def fetch_and_calculate_data():
     """
     Fetch market data and calculate risk score.
+    Cached for 10 minutes to ensure score stability.
     
     Returns:
         Tuple of (market_data, risk_score_data)
@@ -81,7 +84,7 @@ def render_header(last_update_time):
         st.markdown(
             f"""
             <div class="countdown-timer">
-                ⏱️ Next update: {time_remaining}
+                Next update: {time_remaining}
             </div>
             """,
             unsafe_allow_html=True
@@ -117,16 +120,20 @@ def main():
     
     render_metrics_dashboard(market_data)
     
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    render_mini_charts_section(market_data)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown(
         f"""
         <details class="methodology-footer">
-            <summary>How it works</summary>
+            <summary>Market Intelligence Brief</summary>
             <div class="methodology-content">
-                <p><strong>Formula:</strong> Risk Score = Fear & Greed ({RISK_SCORE_WEIGHTS['fear_greed']*100:.0f}%) + BTC Momentum ({RISK_SCORE_WEIGHTS['btc_momentum']*100:.0f}%) + Volume ({RISK_SCORE_WEIGHTS['volume_health']*100:.0f}%) + Breadth ({RISK_SCORE_WEIGHTS['market_breadth']*100:.0f}%)</p>
-                <p><strong>Interpretation:</strong> 0-30 = Risk Off. 60-100 = Risk On.</p>
-                <p><strong>Data:</strong> CoinGecko + Alternative.me. Updates every 10min.</p>
+                <p><strong>Analytical Framework:</strong> Multi-factor quantitative model synthesizing 4 market signals into single directional indicator.</p>
+                <p><strong>Data Synthesis:</strong> Fear & Greed sentiment ({RISK_SCORE_WEIGHTS['fear_greed']*100:.0f}%) + BTC momentum ({RISK_SCORE_WEIGHTS['btc_momentum']*100:.0f}%) + Volume health ({RISK_SCORE_WEIGHTS['volume_health']*100:.0f}%) + Market breadth ({RISK_SCORE_WEIGHTS['market_breadth']*100:.0f}%)</p>
+                <p><strong>Decision Framework:</strong> 0-30 (defensive positioning) | 46-60 (neutral) | 61-100 (aggressive exposure)</p>
+                <p><strong>Infrastructure:</strong> Real-time API orchestration (CoinGecko, Alternative.me) with 10-minute cache stability and graceful error handling.</p>
+                <p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.75rem;">Portfolio demonstration: Business intelligence • Data engineering • Product strategy. Score reflects current market state. Use as one input for decisions. Not financial advice.</p>
             </div>
         </details>
         """,
