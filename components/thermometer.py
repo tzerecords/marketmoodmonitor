@@ -73,37 +73,37 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     # Create asymmetric layout
     col_gauge, col_status = st.columns([0.4, 0.6], gap="large")
     
-    # LEFT: Gauge only
+    # LEFT: Gauge with score badge below
     with col_gauge:
+        # Gauge without number (clean arc only)
         fig = go.Figure(go.Indicator(
-            mode="gauge+number",
+            mode="gauge",
             value=score,
             domain={'x': [0, 1], 'y': [0, 1]},
-            number={
-                'font': {'size': 64, 'color': color},
-                'suffix': ""
-            },
             gauge={
                 'axis': {
                     'range': [0, 100],
-                    'tickwidth': 2,
-                    'tickcolor': "#30363d",
-                    'tickfont': {'size': 12, 'color': '#8b949e'}
+                    'tickwidth': 1,
+                    'tickcolor': "#21262d",
+                    'tickmode': 'array',
+                    'tickvals': [0, 25, 50, 75, 100],
+                    'ticktext': ['0', '25', '50', '75', '100'],
+                    'tickfont': {'size': 10, 'color': '#6e7681'}
                 },
-                'bar': {'color': color, 'thickness': 0.3},
-                'bgcolor': "#0d1117",
-                'borderwidth': 2,
-                'bordercolor': "#30363d",
+                'bar': {'color': color, 'thickness': 0.25},
+                'bgcolor': "#161b22",
+                'borderwidth': 1,
+                'bordercolor': "#21262d",
                 'steps': [
-                    {'range': [0, 20], 'color': 'rgba(239, 68, 68, 0.2)'},
-                    {'range': [20, 40], 'color': 'rgba(249, 115, 22, 0.2)'},
-                    {'range': [40, 60], 'color': 'rgba(234, 179, 8, 0.2)'},
-                    {'range': [60, 80], 'color': 'rgba(16, 185, 129, 0.2)'},
-                    {'range': [80, 100], 'color': 'rgba(34, 197, 94, 0.2)'},
+                    {'range': [0, 20], 'color': '#2d1a1a'},
+                    {'range': [20, 40], 'color': '#2d2319'},
+                    {'range': [40, 60], 'color': '#2d2a19'},
+                    {'range': [60, 80], 'color': '#1a2d23'},
+                    {'range': [80, 100], 'color': '#1a2d24'},
                 ],
                 'threshold': {
                     'line': {'color': color, 'width': 6},
-                    'thickness': 0.85,
+                    'thickness': 0.9,
                     'value': score
                 }
             }
@@ -113,27 +113,44 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             font={'color': "#ffffff", 'family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"},
-            height=280,
-            margin=dict(l=10, r=10, t=20, b=20)
+            height=240,
+            margin=dict(l=10, r=10, t=10, b=10)
         )
         
         st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
+        
+        # Score badge below gauge
+        st.markdown(
+            f"""
+            <div style="text-align: center; margin-top: -1rem;">
+                <div style="display: inline-block; background: {color}; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                    <span style="font-size: 2.5rem; color: #ffffff; font-weight: 700; line-height: 1;">
+                        {score}
+                    </span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section with improved hierarchy
+        # Status section - Vertical layout: emoji → status → score → message
         st.markdown(
             f"""
-            <div style="padding: 1rem 0;">
-                <div style="font-size: 3.5rem; color: #ffffff; font-weight: 700; line-height: 1; margin-bottom: 0.5rem;">
-                    {score} {emoji}
+            <div style="padding: 1rem 0; text-align: center;">
+                <div style="font-size: 2.5rem; line-height: 1; margin-bottom: 0.75rem;">
+                    {emoji}
                 </div>
-                <div style="display: inline-block; background: {color}1a; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
-                    <span style="font-size: 2rem; color: {color}; font-weight: 600; letter-spacing: 0.02em;">
+                <div style="display: inline-block; background: {color}1a; padding: 0.5rem 1.25rem; border-radius: 6px; margin-bottom: 0.75rem;">
+                    <span style="font-size: 1.75rem; color: {color}; font-weight: 700; letter-spacing: 0.05em;">
                         {status}
                     </span>
                 </div>
-                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5; margin-top: 0.5rem;">
+                <div style="font-size: 1.5rem; color: #ffffff; font-weight: 600; margin-bottom: 0.5rem;">
+                    {score}
+                </div>
+                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
                     {message}
                 </div>
             </div>
@@ -141,25 +158,37 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             unsafe_allow_html=True
         )
         
-        # Historical Values section - 2x2 Grid
-        now_html = _render_history_grid_item("Now", historical['now'])
-        yesterday_html = _render_history_grid_item("Yesterday", historical['yesterday'])
-        week_html = _render_history_grid_item("Last week", historical['last_week'])
-        month_html = _render_history_grid_item("Last month", historical['last_month'])
-        
-        st.markdown(
-            f"""
-            <div style="margin-top: 1.5rem; padding: 1rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px;">
-                <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
-                    HISTORICAL VALUES
+        # Historical Values section - 2x2 Grid with error handling
+        try:
+            now_html = _render_history_grid_item("Now", historical.get('now'))
+            yesterday_html = _render_history_grid_item("Yesterday", historical.get('yesterday'))
+            week_html = _render_history_grid_item("Last week", historical.get('last_week'))
+            month_html = _render_history_grid_item("Last month", historical.get('last_month'))
+            
+            st.markdown(
+                f"""
+                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px;">
+                    <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
+                        HISTORICAL VALUES
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        {now_html}
+                        {yesterday_html}
+                        {week_html}
+                        {month_html}
+                    </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                    {now_html}
-                    {yesterday_html}
-                    {week_html}
-                    {month_html}
+                """,
+                unsafe_allow_html=True
+            )
+        except Exception:
+            st.markdown(
+                """
+                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; text-align: center;">
+                    <div style="color: #8b949e; font-size: 0.875rem; font-style: italic;">
+                        Historical data aggregating, check back in 10 minutes
+                    </div>
                 </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+                """,
+                unsafe_allow_html=True
+            )

@@ -137,33 +137,43 @@ def main():
     # Header controls
     render_header_controls(st.session_state.last_fetch_time)
     
-    # Layout structure with tight spacing
-    # 1. Hero section (thermometer asymmetric) - margin-bottom: 1.5rem
+    # Layout structure with ultra-tight spacing
+    # 1. Hero section (thermometer asymmetric) - margin-bottom: 0.75rem
     render_thermometer(risk_score_data, st.session_state.last_fetch_time)
-    st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="margin-bottom: 0.75rem;"></div>', unsafe_allow_html=True)
     
-    # 2. Metrics cards (4 cards tight) - margin-bottom: 1rem
+    # 2. Metrics cards (4 cards tight) - margin-bottom: 0.5rem
     render_metrics_dashboard(market_data)
-    st.markdown('<div style="margin-bottom: 1rem;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="margin-bottom: 0.5rem;"></div>', unsafe_allow_html=True)
     
-    # 3. Top movers (horizontal single row) - margin-bottom: 2rem
+    # 3. Top movers (horizontal single row) - margin-bottom: 1.5rem
     if market_data.get("top_movers"):
         render_hot_tokens(market_data["top_movers"])
-    st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
     
-    # 4. About modal/expander - margin-top: 3rem
-    st.markdown('<div style="margin-top: 3rem; border-top: 1px solid #30363d; padding-top: 2rem;"></div>', unsafe_allow_html=True)
+    # 4. About modal/expander - margin-top: 2.5rem
+    st.markdown('<div style="margin-top: 2.5rem; border-top: 1px solid #30363d; padding-top: 2rem;"></div>', unsafe_allow_html=True)
     
     with st.expander("About", expanded=False):
         st.markdown(
             """
             **Technical Stack**
             
-            Market Mood Monitor is a quantitative sentiment tracker combining multiple data sources into a single risk score. Built with Python 3.11 and Streamlit 1.28, integrating Fear & Greed Index from Alternative.me and market data via CoinGecko API. Updates every 10 minutes with automated caching layer using decorators `st.cache_data` with TTL of 10 minutes and singleton pattern for API clients. Persistence layer: JSON append-only logs with 90-day retention policy.
+            - **Backend:** Python 3.11 with Streamlit 1.28 framework
+            - **Caching layer:** `st.cache_data` decorators with 10min TTL
+            - **APIs:** CoinGecko for market data, Alternative.me for sentiment
+            - **Rate limiting:** 50 req/min with exponential backoff
+            - **Persistence:** JSON append-only logs with 90-day retention
+            - **SQL:** Query layer prepared for future PostgreSQL/Snowflake integration
             
             **Methodology**
             
-            Weighted composite score: Fear & Greed 35%, BTC Momentum 25%, Volume Health 20%, Market Breadth 20%. Data normalization via z-score transformation mapped to 0-100 scale. API rate limiting: 50 requests per minute on CoinGecko with exponential backoff retry logic. Fallback mechanisms implemented for degraded sources.
+            - **Fear & Greed Index:** 35% weight
+            - **BTC Momentum:** 25% weight
+            - **Volume Health:** 20% weight
+            - **Market Breadth:** 20% weight
+            - **Normalization:** Z-score transformation to 0-100 scale
+            - **Fallbacks:** Implemented for degraded API sources
             """,
             unsafe_allow_html=False
         )
@@ -171,7 +181,7 @@ def main():
     # Footer
     st.markdown(
         """
-        <div style="text-align: center; color: #6e7681; font-size: 0.75rem; margin-top: 1.5rem; padding: 1rem;">
+        <div style="text-align: center; color: #6e7681; font-size: 0.75rem; margin-top: 2.5rem; padding: 1rem;">
             Data from CoinGecko & Alternative.me • Not financial advice
         </div>
         """,

@@ -91,7 +91,7 @@ p {
     border-top: 1px solid #30363d;
 }
 
-/* Button Styling - GitHub Dark Theme */
+/* Button Styling - GitHub Dark Theme with Micro-interactions */
 .stButton > button {
     background: #21262d;
     color: #c9d1d9;
@@ -100,15 +100,19 @@ p {
     padding: 0.5rem 1rem;
     font-weight: 600;
     font-size: 0.875rem;
+    transition: all 0.2s ease;
 }
 
 .stButton > button:hover {
     background: #30363d;
     border-color: #30363d;
+    box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 .stButton > button:active {
     background: #30363d;
+    transform: translateY(0);
 }
 
 /* Expander/Details Styling */
@@ -181,5 +185,10 @@ code {
     
     .main .block-container {
         padding-top: 1rem;
+    }
+    
+    /* Increase spacing on mobile to avoid cramped feeling */
+    [data-testid="column"] {
+        padding: 0.75rem !important;
     }
 }

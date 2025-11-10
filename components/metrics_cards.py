@@ -66,7 +66,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     with col1:
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     BTC DOMINANCE
                 </div>
@@ -89,7 +89,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     TOTAL MARKET CAP
                 </div>
@@ -104,7 +104,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     with col3:
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     ALTCOIN SEASON
                 </div>
@@ -119,7 +119,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     with col4:
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     24H VOLUME
                 </div>
