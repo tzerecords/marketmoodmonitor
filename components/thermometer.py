@@ -9,13 +9,23 @@ from datetime import datetime
 from data.score_history import get_historical_values
 
 
-def _render_history_grid_item(label: str, data: Optional[Dict[str, Any]]) -> str:
-    """Render single history item as grid cell."""
+def _validate_html_tags(html: str) -> bool:
+    """Validate HTML tags are balanced."""
+    try:
+        opening = html.count('<div')
+        closing = html.count('</div>')
+        return opening == closing
+    except Exception:
+        return False
+
+
+def _render_history_row(label: str, data: Optional[Dict[str, Any]]) -> str:
+    """Render single history item as vertical row (Fear & Greed style)."""
     if not data:
         return f"""
-        <div style="background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.75rem;">
-            <div style="color: #8b949e; font-size: 0.75rem; margin-bottom: 0.25rem;">{label}</div>
-            <div style="color: #6e7681; font-size: 0.875rem;">—</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d;">
+            <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
+            <span style="color: #6e7681; font-size: 0.875rem;">—</span>
         </div>
         """
     
@@ -33,10 +43,14 @@ def _render_history_grid_item(label: str, data: Optional[Dict[str, Any]]) -> str
     color = color_map.get(status, '#8b949e')
     
     return f"""
-    <div style="background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.75rem;">
-        <div style="color: #8b949e; font-size: 0.75rem; margin-bottom: 0.25rem;">{label}</div>
-        <div style="color: #ffffff; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.125rem;">{score}</div>
-        <div style="color: {color}; font-size: 0.75rem; font-weight: 500;">{status}</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #21262d;">
+        <div>
+            <span style="color: #8b949e; font-size: 0.875rem; margin-right: 0.5rem;">{label}</span>
+            <span style="color: {color}; font-size: 0.875rem; font-weight: 600;">{status}</span>
+        </div>
+        <div style="background: {color}; color: #ffffff; font-size: 0.875rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 50px;">
+            {score}
+        </div>
     </div>
     """
 
@@ -55,27 +69,15 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     message = risk_data.get("message", "")
     color = risk_data.get("color", "#808080")
     
-    # Calculate time since last update
-    time_ago = ""
-    if last_updated:
-        delta = datetime.now() - last_updated
-        minutes = int(delta.total_seconds() / 60)
-        if minutes < 1:
-            time_ago = "Just now"
-        elif minutes == 1:
-            time_ago = "1 min ago"
-        else:
-            time_ago = f"{minutes} min ago"
-    
     # Get historical values
     historical = get_historical_values()
     
     # Create asymmetric layout
     col_gauge, col_status = st.columns([0.4, 0.6], gap="large")
     
-    # LEFT: Gauge with score badge below
+    # LEFT: Gauge with pointer/needle
     with col_gauge:
-        # Gauge without number (clean arc only)
+        # Gauge with gray pointer/needle (Fear & Greed style)
         fig = go.Figure(go.Indicator(
             mode="gauge",
             value=score,
@@ -90,7 +92,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     'ticktext': ['0', '25', '50', '75', '100'],
                     'tickfont': {'size': 10, 'color': '#6e7681'}
                 },
-                'bar': {'color': color, 'thickness': 0.25},
+                'bar': {'color': 'rgba(0,0,0,0)', 'thickness': 0},  # Hide bar, show only pointer
                 'bgcolor': "#161b22",
                 'borderwidth': 1,
                 'bordercolor': "#21262d",
@@ -102,8 +104,8 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     {'range': [80, 100], 'color': '#1a2d24'},
                 ],
                 'threshold': {
-                    'line': {'color': color, 'width': 6},
-                    'thickness': 0.9,
+                    'line': {'color': '#8b949e', 'width': 4},  # Gray pointer/needle
+                    'thickness': 0.75,
                     'value': score
                 }
             }
@@ -114,16 +116,35 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             plot_bgcolor="rgba(0,0,0,0)",
             font={'color': "#ffffff", 'family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"},
             height=240,
-            margin=dict(l=10, r=10, t=10, b=10)
+            margin=dict(l=10, r=10, t=10, b=10),
+            transition={'duration': 600, 'easing': 'cubic-in-out'}
         )
         
-        st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
+        # Add animation to the indicator needle
+        fig.update_traces(
+            selector=dict(type='indicator'),
+            transition={'duration': 600, 'easing': 'cubic-in-out'}
+        )
         
-        # Score badge below gauge
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        
+        # Score badge below gauge with subtle pulse animation
         st.markdown(
             f"""
+            <style>
+                @keyframes scorePulse {{
+                    0%, 100% {{
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                        transform: scale(1);
+                    }}
+                    50% {{
+                        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+                        transform: scale(1.02);
+                    }}
+                }}
+            </style>
             <div style="text-align: center; margin-top: -1rem;">
-                <div style="display: inline-block; background: {color}; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                <div style="display: inline-block; background: {color}; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); animation: scorePulse 2s ease-in-out infinite;">
                     <span style="font-size: 2.5rem; color: #ffffff; font-weight: 700; line-height: 1;">
                         {score}
                     </span>
@@ -135,58 +156,86 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - Vertical layout: emoji → status → score → message
-        st.markdown(
-            f"""
-            <div style="padding: 1rem 0; text-align: center;">
-                <div style="font-size: 2.5rem; line-height: 1; margin-bottom: 0.75rem;">
-                    {emoji}
-                </div>
-                <div style="display: inline-block; background: {color}1a; padding: 0.5rem 1.25rem; border-radius: 6px; margin-bottom: 0.75rem;">
-                    <span style="font-size: 1.75rem; color: {color}; font-weight: 700; letter-spacing: 0.05em;">
+        # Status section - HORIZONTAL COMPACT (Fear & Greed style)
+        # "Now: Fear" layout - emoji inline + status dominant with fade-in animation
+        status_html = f"""
+        <style>
+            @keyframes fadeIn {{
+                from {{ opacity: 0; }}
+                to {{ opacity: 1; }}
+            }}
+        </style>
+        <div style="padding: 1rem 0; animation: fadeIn 0.5s ease-out;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem; line-height: 1;">{emoji}</span>
+                <div style="background: {color}1a; padding: 0.5rem 1.5rem; border-radius: 6px; border: 1px solid {color}40;">
+                    <span style="font-size: 2.5rem; color: {color}; font-weight: 700; letter-spacing: 0.05em; line-height: 1;">
                         {status}
                     </span>
                 </div>
-                <div style="font-size: 1.5rem; color: #ffffff; font-weight: 600; margin-bottom: 0.5rem;">
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; color: #ffffff; font-weight: 700; margin-bottom: 0.5rem;">
                     {score}
                 </div>
                 <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
                     {message}
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """
         
-        # Historical Values section - 2x2 Grid with error handling
+        # Validate HTML before rendering
+        if _validate_html_tags(status_html):
+            st.markdown(status_html, unsafe_allow_html=True)
+        else:
+            st.error("Status rendering error - please refresh")
+        
+        # Historical Values section - SINGLE COLUMN VERTICAL (Fear & Greed style)
         try:
-            now_html = _render_history_grid_item("Now", historical.get('now'))
-            yesterday_html = _render_history_grid_item("Yesterday", historical.get('yesterday'))
-            week_html = _render_history_grid_item("Last week", historical.get('last_week'))
-            month_html = _render_history_grid_item("Last month", historical.get('last_month'))
+            now_row = _render_history_row("Now", historical.get('now'))
+            yesterday_row = _render_history_row("Yesterday", historical.get('yesterday'))
+            week_row = _render_history_row("Last week", historical.get('last_week'))
+            month_row = _render_history_row("Last month", historical.get('last_month'))
             
-            st.markdown(
-                f"""
-                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px;">
-                    <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
-                        HISTORICAL VALUES
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                        {now_html}
-                        {yesterday_html}
-                        {week_html}
-                        {month_html}
-                    </div>
+            historical_html = f"""
+            <style>
+                @keyframes slideInUp {{
+                    from {{
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }}
+                    to {{
+                        opacity: 1;
+                        transform: translateY(0);
+                    }}
+                }}
+            </style>
+            <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; animation: slideInUp 0.4s ease-out;">
+                <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
+                    HISTORICAL VALUES
                 </div>
-                """,
-                unsafe_allow_html=True
-            )
-        except Exception:
+                <div style="display: flex; flex-direction: column;">
+                    {now_row}
+                    {yesterday_row}
+                    {week_row}
+                    {month_row}
+                </div>
+            </div>
+            """
+            
+            # Validate HTML before rendering
+            if _validate_html_tags(historical_html):
+                st.markdown(historical_html, unsafe_allow_html=True)
+            else:
+                raise ValueError("HTML validation failed")
+                
+        except Exception as e:
             st.markdown(
                 """
                 <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; text-align: center;">
                     <div style="color: #8b949e; font-size: 0.875rem; font-style: italic;">
-                        Historical data aggregating, check back in 10 minutes
+                        Historical data loading, please wait...
                     </div>
                 </div>
                 """,
