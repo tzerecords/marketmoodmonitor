@@ -1,63 +1,82 @@
 """
-Hot Tokens component with separated gainers and losers sections.
+Top Movers component with horizontal single-row layout and timeframe selector.
 """
 import streamlit as st
 from typing import Dict, List, Any
 
 
-def render_hot_tokens(movers_data: Dict[str, List[Dict]]):
+def render_hot_tokens(movers_data: Dict[str, List[Dict]], timeframe: str = "24H"):
     """
-    Render separated gainers and losers sections side-by-side.
+    Render top 3 gainers + top 3 losers in single horizontal row.
     
     Args:
         movers_data: Dict containing 'gainers' and 'losers' lists
+        timeframe: Selected timeframe (24H, 7D, 30D)
     """
     if not movers_data:
         return
     
-    gainers = movers_data.get("gainers", [])
-    losers = movers_data.get("losers", [])
+    gainers = movers_data.get("gainers", [])[:3]
+    losers = movers_data.get("losers", [])[:3]
     
-    col1, col2 = st.columns(2, gap="large")
+    # Build gainer tokens
+    gainer_tokens = []
+    for gainer in gainers:
+        symbol = gainer.get("symbol", "").upper()
+        change = gainer.get("price_change_24h", 0)
+        gainer_tokens.append(
+            f'<span style="color: #10b981; font-weight: 600;">{symbol} +{change:.1f}%</span>'
+        )
     
-    with col1:
-        gainer_items = []
-        for gainer in gainers[:5]:
-            symbol = gainer.get("symbol", "").upper()
-            change = gainer.get("price_change_24h", 0)
-            gainer_items.append(f'<span style="color: #10b981; font-weight: 500;">{symbol} <span style="font-weight: 700;">+{change:.1f}%</span></span>')
-        
-        gainer_html = " ● ".join(gainer_items)
-        
+    # Build loser tokens
+    loser_tokens = []
+    for loser in losers:
+        symbol = loser.get("symbol", "").upper()
+        change = loser.get("price_change_24h", 0)
+        loser_tokens.append(
+            f'<span style="color: #ef4444; font-weight: 600;">{symbol} {change:.1f}%</span>'
+        )
+    
+    # Join with separators
+    gainers_html = " | ".join(gainer_tokens) if gainer_tokens else "—"
+    losers_html = " | ".join(loser_tokens) if loser_tokens else "—"
+    
+    # Header with timeframe selector (static for now, will be dynamic in task 7)
+    col_header, col_selector = st.columns([0.85, 0.15])
+    
+    with col_header:
         st.markdown(
             f"""
-            <div class="movers-section">
-                <div class="movers-title" style="color: #10b981;">TOP GAINERS</div>
-                <div class="movers-content">
-                    {gainer_html}
-                </div>
+            <div style="margin-bottom: 0.75rem;">
+                <span style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+                    TOP MOVERS
+                </span>
             </div>
             """,
             unsafe_allow_html=True
         )
     
-    with col2:
-        loser_items = []
-        for loser in losers[:5]:
-            symbol = loser.get("symbol", "").upper()
-            change = loser.get("price_change_24h", 0)
-            loser_items.append(f'<span style="color: #ef4444; font-weight: 500;">{symbol} <span style="font-weight: 700;">{change:.1f}%</span></span>')
-        
-        loser_html = " ● ".join(loser_items)
-        
+    with col_selector:
+        # Timeframe dropdown (will be functional in task 7)
         st.markdown(
             f"""
-            <div class="movers-section">
-                <div class="movers-title" style="color: #ef4444;">TOP LOSERS</div>
-                <div class="movers-content">
-                    {loser_html}
-                </div>
+            <div style="margin-bottom: 0.75rem; text-align: right;">
+                <span style="color: #8b949e; font-size: 0.8125rem; font-weight: 500;">
+                    {timeframe} ▼
+                </span>
             </div>
             """,
             unsafe_allow_html=True
         )
+    
+    # Single row with all tokens
+    st.markdown(
+        f"""
+        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
+            <div style="color: #ffffff; font-size: 1rem; line-height: 1.5;">
+                {gainers_html} <span style="color: #6e7681; font-weight: 700; margin: 0 0.5rem;">●</span> {losers_html}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
