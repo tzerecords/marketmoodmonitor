@@ -116,14 +116,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             plot_bgcolor="rgba(0,0,0,0)",
             font={'color': "#ffffff", 'family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"},
             height=240,
-            margin=dict(l=10, r=10, t=10, b=10),
-            transition={'duration': 600, 'easing': 'cubic-in-out'}
-        )
-        
-        # Add animation to the indicator needle
-        fig.update_traces(
-            selector=dict(type='indicator'),
-            transition={'duration': 600, 'easing': 'cubic-in-out'}
+            margin=dict(l=10, r=10, t=10, b=10)
         )
         
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
