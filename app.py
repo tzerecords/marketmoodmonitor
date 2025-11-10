@@ -12,7 +12,6 @@ from data.calculator import RiskScoreCalculator
 from components.thermometer import render_thermometer
 from components.hot_tokens import render_hot_tokens
 from components.metrics_cards import render_metrics_dashboard
-from components.mini_charts import render_mini_charts_section
 from utils.config import REFRESH_INTERVAL_SECONDS, RISK_SCORE_WEIGHTS
 from utils.helpers import get_time_until_next_refresh
 
@@ -60,95 +59,125 @@ def fetch_and_calculate_data():
     
     return market_data, risk_score_data
 
-def render_header(last_update_time):
+
+def render_header_controls(last_update_time):
     """
-    Render header with title, refresh button, and countdown timer.
+    Render refresh controls with dual timestamps.
     
     Args:
         last_update_time: Timestamp of last data fetch
     """
-    col1, col2, col3 = st.columns([3, 1, 1])
+    # Calculate time ago
+    time_ago = ""
+    if last_update_time:
+        delta = datetime.now() - last_update_time
+        minutes = int(delta.total_seconds() / 60)
+        if minutes < 1:
+            time_ago = "Just now"
+        elif minutes == 1:
+            time_ago = "1 min ago"
+        else:
+            time_ago = f"{minutes} min ago"
+    
+    # Calculate next update
+    time_remaining = get_time_until_next_refresh(last_update_time, REFRESH_INTERVAL_SECONDS) if last_update_time else "—"
+    
+    col1, col2 = st.columns([0.8, 0.2])
     
     with col1:
         st.markdown(
-            """
-            <div class="header-title">
-                MARKET MOOD MONITOR
+            f"""
+            <div style="display: flex; gap: 1.5rem; align-items: center; padding: 0.5rem 0;">
+                <span style="color: #8b949e; font-size: 0.8125rem;">
+                    Last updated: <span style="color: #c9d1d9; font-weight: 500;">{time_ago}</span>
+                </span>
+                <span style="color: #6e7681; font-size: 1.25rem; font-weight: 300;">•</span>
+                <span style="color: #8b949e; font-size: 0.8125rem;">
+                    Next update in: <span style="color: #c9d1d9; font-weight: 500;">{time_remaining}</span>
+                </span>
             </div>
             """,
             unsafe_allow_html=True
         )
     
     with col2:
-        time_remaining = get_time_until_next_refresh(last_update_time, REFRESH_INTERVAL_SECONDS)
-        st.markdown(
-            f"""
-            <div class="countdown-timer">
-                Next update: {time_remaining}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    with col3:
-        if st.button("REFRESH", use_container_width=True):
+        if st.button("Refresh Now", use_container_width=True, type="primary"):
             st.cache_data.clear()
             st.rerun()
-    
-    st.markdown("<hr style='border: 1px solid #30363d; margin: 1rem 0;'>", unsafe_allow_html=True)
+
 
 def main():
     """Main application entry point."""
     load_css()
     
+    # Initialize session state
     if 'last_fetch_time' not in st.session_state:
         st.session_state.last_fetch_time = None
+    if 'previous_score' not in st.session_state:
+        st.session_state.previous_score = None
     
+    # Fetch data
     market_data, risk_score_data = fetch_and_calculate_data()
+    current_score = risk_score_data.get("score")
+    current_status = risk_score_data.get("status")
     
+    # Update last fetch time
     if market_data.get("timestamp"):
         st.session_state.last_fetch_time = market_data["timestamp"]
     
-    render_header(st.session_state.last_fetch_time)
+    # Toast notification on score change (auto-refresh only)
+    if st.session_state.previous_score is not None:
+        if current_score != st.session_state.previous_score:
+            st.toast(f"Score updated: {current_score} ({current_status})", icon="✅")
     
-    render_thermometer(risk_score_data)
+    # Update previous score
+    st.session_state.previous_score = current_score
     
+    # Header controls
+    render_header_controls(st.session_state.last_fetch_time)
+    
+    # Layout structure with tight spacing
+    # 1. Hero section (thermometer asymmetric) - margin-bottom: 1.5rem
+    render_thermometer(risk_score_data, st.session_state.last_fetch_time)
+    st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
+    
+    # 2. Metrics cards (4 cards tight) - margin-bottom: 1rem
+    render_metrics_dashboard(market_data)
+    st.markdown('<div style="margin-bottom: 1rem;"></div>', unsafe_allow_html=True)
+    
+    # 3. Top movers (horizontal single row) - margin-bottom: 2rem
     if market_data.get("top_movers"):
         render_hot_tokens(market_data["top_movers"])
+    st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    # 4. About modal/expander - margin-top: 3rem
+    st.markdown('<div style="margin-top: 3rem; border-top: 1px solid #30363d; padding-top: 2rem;"></div>', unsafe_allow_html=True)
     
-    render_metrics_dashboard(market_data)
+    with st.expander("About", expanded=False):
+        st.markdown(
+            """
+            Market Mood Monitor is a quantitative sentiment tracker combining multiple data sources into a single risk score. 
+            Built with Python + Streamlit, integrating Fear & Greed Index (Alternative.me), market breadth patterns, and 
+            momentum signals via CoinGecko API. Updates every 10 minutes with automated caching layer.
+            
+            **Model:** Fear & Greed (35%) + BTC Momentum (25%) + Volume Health (20%) + Market Breadth (20%)
+            
+            **Sources:** CoinGecko API, Alternative.me Fear & Greed Index
+            """,
+            unsafe_allow_html=False
+        )
     
-    render_mini_charts_section(market_data)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    st.markdown(
-        f"""
-        <details class="methodology-footer">
-            <summary>Market Intelligence Brief</summary>
-            <div class="methodology-content">
-                <p><strong>Analytical Framework:</strong> Multi-factor quantitative model synthesizing 4 market signals into single directional indicator.</p>
-                <p><strong>Data Synthesis:</strong> Fear & Greed sentiment ({RISK_SCORE_WEIGHTS['fear_greed']*100:.0f}%) + BTC momentum ({RISK_SCORE_WEIGHTS['btc_momentum']*100:.0f}%) + Volume health ({RISK_SCORE_WEIGHTS['volume_health']*100:.0f}%) + Market breadth ({RISK_SCORE_WEIGHTS['market_breadth']*100:.0f}%)</p>
-                <p><strong>Decision Framework:</strong> 0-30 (defensive positioning) | 46-60 (neutral) | 61-100 (aggressive exposure)</p>
-                <p><strong>Infrastructure:</strong> Real-time API orchestration (CoinGecko, Alternative.me) with 10-minute cache stability and graceful error handling.</p>
-                <p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.75rem;">Portfolio demonstration: Business intelligence • Data engineering • Product strategy. Score reflects current market state. Use as one input for decisions. Not financial advice.</p>
-            </div>
-        </details>
-        """,
-        unsafe_allow_html=True
-    )
-    
+    # Footer
     st.markdown(
         """
-        <div style="text-align: center; color: #6e7681; font-size: 0.75rem; margin-top: 2rem; padding: 1rem;">
-            Market Mood Monitor | Data from CoinGecko & Alternative.me | Not financial advice
+        <div style="text-align: center; color: #6e7681; font-size: 0.75rem; margin-top: 1.5rem; padding: 1rem;">
+            Data from CoinGecko & Alternative.me • Not financial advice
         </div>
         """,
         unsafe_allow_html=True
     )
     
+    # Auto-refresh logic
     time.sleep(1)
     if st.session_state.last_fetch_time:
         elapsed = (datetime.now() - st.session_state.last_fetch_time).total_seconds()
