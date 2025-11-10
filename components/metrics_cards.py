@@ -60,31 +60,18 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     # Calculate Altcoin Season Index
     altcoin_season = _calculate_altcoin_season(top_movers, btc_change_24h)
     
-    # TODO: Get previous day values for delta calculation
-    # For now, using dummy deltas (will implement with historical data)
-    btc_dom_delta = 0.0
-    mcap_delta = 0.0
-    volume_delta = 0.0
-    altcoin_delta = 0.0
-    
     # Tight spacing: gap="medium" = 1rem
     col1, col2, col3, col4 = st.columns(4, gap="medium")
     
     with col1:
-        delta_color = "#10b981" if btc_dom_delta > 0 else "#ef4444" if btc_dom_delta < 0 else "#6e7681"
-        delta_sign = "+" if btc_dom_delta > 0 else ""
-        
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     BTC DOMINANCE
                 </div>
-                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;">
+                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {btc_dominance:.1f}%
-                </div>
-                <div style="color: {delta_color}; font-size: 1rem; font-weight: 500;">
-                    {delta_sign}{btc_dom_delta:.2f}%
                 </div>
             </div>
             """,
@@ -92,20 +79,22 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         )
     
     with col2:
-        delta_color = "#10b981" if mcap_delta > 0 else "#ef4444" if mcap_delta < 0 else "#6e7681"
-        delta_sign = "+" if mcap_delta > 0 else ""
+        # Format as Trillions if > 1000B
+        if total_mcap > 1_000_000_000_000:
+            mcap_display = f"${total_mcap / 1_000_000_000_000:.1f}T"
+        elif total_mcap > 1_000_000_000:
+            mcap_display = f"${total_mcap / 1_000_000_000:.1f}B"
+        else:
+            mcap_display = format_large_number(total_mcap)
         
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     TOTAL MARKET CAP
                 </div>
-                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;">
-                    {format_large_number(total_mcap)}
-                </div>
-                <div style="color: {delta_color}; font-size: 1rem; font-weight: 500;">
-                    {delta_sign}{mcap_delta:.2f}%
+                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
+                    {mcap_display}
                 </div>
             </div>
             """,
@@ -113,21 +102,14 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         )
     
     with col3:
-        # Altcoin season: > 75% = bullish, < 25% = bearish
-        delta_color = "#10b981" if altcoin_delta > 0 else "#ef4444" if altcoin_delta < 0 else "#6e7681"
-        delta_sign = "+" if altcoin_delta > 0 else ""
-        
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     ALTCOIN SEASON
                 </div>
-                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;">
+                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {altcoin_season:.0f}%
-                </div>
-                <div style="color: {delta_color}; font-size: 1rem; font-weight: 500;">
-                    {delta_sign}{altcoin_delta:.0f}% vs BTC
                 </div>
             </div>
             """,
@@ -135,20 +117,14 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         )
     
     with col4:
-        delta_color = "#10b981" if volume_delta > 0 else "#ef4444" if volume_delta < 0 else "#6e7681"
-        delta_sign = "+" if volume_delta > 0 else ""
-        
         st.markdown(
             f"""
-            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
+            <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1.25rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                     24H VOLUME
                 </div>
-                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;">
+                <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {format_large_number(volume_24h)}
-                </div>
-                <div style="color: {delta_color}; font-size: 1rem; font-weight: 500;">
-                    {delta_sign}{volume_delta:.2f}%
                 </div>
             </div>
             """,

@@ -41,33 +41,17 @@ def render_hot_tokens(movers_data: Dict[str, List[Dict]], timeframe: str = "24H"
     gainers_html = " | ".join(gainer_tokens) if gainer_tokens else "—"
     losers_html = " | ".join(loser_tokens) if loser_tokens else "—"
     
-    # Header with timeframe selector (static for now, will be dynamic in task 7)
-    col_header, col_selector = st.columns([0.85, 0.15])
-    
-    with col_header:
-        st.markdown(
-            f"""
-            <div style="margin-bottom: 0.75rem;">
-                <span style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
-                    TOP MOVERS
-                </span>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    with col_selector:
-        # Timeframe dropdown (will be functional in task 7)
-        st.markdown(
-            f"""
-            <div style="margin-bottom: 0.75rem; text-align: right;">
-                <span style="color: #8b949e; font-size: 0.8125rem; font-weight: 500;">
-                    {timeframe} ▼
-                </span>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    # Header
+    st.markdown(
+        f"""
+        <div style="margin-bottom: 0.75rem;">
+            <span style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+                TOP MOVERS (24H)
+            </span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Single row with all tokens
     st.markdown(

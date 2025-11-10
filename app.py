@@ -52,8 +52,9 @@ def fetch_and_calculate_data():
     fetcher = get_fetcher()
     calculator = get_calculator()
     
-    with st.spinner("Fetching latest market data..."):
+    with st.spinner("Aggregating market signals from CoinGecko & Alternative.me..."):
         market_data = fetcher.fetch_all_data()
+        time.sleep(0.5)
     
     risk_score_data = calculator.calculate_risk_score(market_data)
     
@@ -156,13 +157,13 @@ def main():
     with st.expander("About", expanded=False):
         st.markdown(
             """
-            Market Mood Monitor is a quantitative sentiment tracker combining multiple data sources into a single risk score. 
-            Built with Python + Streamlit, integrating Fear & Greed Index (Alternative.me), market breadth patterns, and 
-            momentum signals via CoinGecko API. Updates every 10 minutes with automated caching layer.
+            **Technical Stack**
             
-            **Model:** Fear & Greed (35%) + BTC Momentum (25%) + Volume Health (20%) + Market Breadth (20%)
+            Market Mood Monitor is a quantitative sentiment tracker combining multiple data sources into a single risk score. Built with Python 3.11 and Streamlit 1.28, integrating Fear & Greed Index from Alternative.me and market data via CoinGecko API. Updates every 10 minutes with automated caching layer using decorators `st.cache_data` with TTL of 10 minutes and singleton pattern for API clients. Persistence layer: JSON append-only logs with 90-day retention policy.
             
-            **Sources:** CoinGecko API, Alternative.me Fear & Greed Index
+            **Methodology**
+            
+            Weighted composite score: Fear & Greed 35%, BTC Momentum 25%, Volume Health 20%, Market Breadth 20%. Data normalization via z-score transformation mapped to 0-100 scale. API rate limiting: 50 requests per minute on CoinGecko with exponential backoff retry logic. Fallback mechanisms implemented for degraded sources.
             """,
             unsafe_allow_html=False
         )

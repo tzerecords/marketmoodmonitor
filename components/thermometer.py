@@ -4,18 +4,18 @@ Gauge left (40%), Status + Historical Values right (60%).
 """
 import streamlit as st
 import plotly.graph_objects as go
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 from data.score_history import get_historical_values
 
 
-def _render_history_item(label: str, data: Dict[str, Any]) -> str:
-    """Render single history item with colored badge."""
+def _render_history_grid_item(label: str, data: Optional[Dict[str, Any]]) -> str:
+    """Render single history item as grid cell."""
     if not data:
         return f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d;">
-            <span style="color: #8b949e; font-size: 0.8125rem;">{label}</span>
-            <span style="color: #6e7681; font-size: 0.8125rem;">—</span>
+        <div style="background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.75rem;">
+            <div style="color: #8b949e; font-size: 0.75rem; margin-bottom: 0.25rem;">{label}</div>
+            <div style="color: #6e7681; font-size: 0.875rem;">—</div>
         </div>
         """
     
@@ -33,19 +33,15 @@ def _render_history_item(label: str, data: Dict[str, Any]) -> str:
     color = color_map.get(status, '#8b949e')
     
     return f"""
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d;">
-        <span style="color: #c9d1d9; font-size: 0.8125rem;">{label}</span>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: {color}; font-weight: 500; font-size: 0.8125rem;">{status}</span>
-            <span style="color: #ffffff; font-size: 1rem; font-weight: 700; background: {color}22; padding: 0.25rem 0.5rem; border-radius: 4px; min-width: 2.5rem; text-align: center;">
-                {score}
-            </span>
-        </div>
+    <div style="background: #0d1117; border: 1px solid #21262d; border-radius: 4px; padding: 0.75rem;">
+        <div style="color: #8b949e; font-size: 0.75rem; margin-bottom: 0.25rem;">{label}</div>
+        <div style="color: #ffffff; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.125rem;">{score}</div>
+        <div style="color: {color}; font-size: 0.75rem; font-weight: 500;">{status}</div>
     </div>
     """
 
 
-def render_thermometer(risk_data: Dict[str, Any], last_updated: datetime = None):
+def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetime] = None):
     """
     Render asymmetric Risk Score thermometer.
     
@@ -99,15 +95,15 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: datetime = None)
                 'borderwidth': 2,
                 'bordercolor': "#30363d",
                 'steps': [
-                    {'range': [0, 30], 'color': 'rgba(239, 68, 68, 0.1)'},
-                    {'range': [30, 45], 'color': 'rgba(249, 115, 22, 0.1)'},
-                    {'range': [45, 60], 'color': 'rgba(234, 179, 8, 0.1)'},
-                    {'range': [60, 80], 'color': 'rgba(16, 185, 129, 0.1)'},
-                    {'range': [80, 100], 'color': 'rgba(34, 197, 94, 0.1)'},
+                    {'range': [0, 20], 'color': 'rgba(239, 68, 68, 0.2)'},
+                    {'range': [20, 40], 'color': 'rgba(249, 115, 22, 0.2)'},
+                    {'range': [40, 60], 'color': 'rgba(234, 179, 8, 0.2)'},
+                    {'range': [60, 80], 'color': 'rgba(16, 185, 129, 0.2)'},
+                    {'range': [80, 100], 'color': 'rgba(34, 197, 94, 0.2)'},
                 ],
                 'threshold': {
-                    'line': {'color': color, 'width': 4},
-                    'thickness': 0.75,
+                    'line': {'color': color, 'width': 6},
+                    'thickness': 0.85,
                     'value': score
                 }
             }
@@ -125,38 +121,44 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: datetime = None)
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section
+        # Status section with improved hierarchy
         st.markdown(
             f"""
             <div style="padding: 1rem 0;">
-                <div style="font-size: 3rem; color: #ffffff; font-weight: 700; line-height: 1; margin-bottom: 0.5rem;">
+                <div style="font-size: 3.5rem; color: #ffffff; font-weight: 700; line-height: 1; margin-bottom: 0.5rem;">
                     {score} {emoji}
                 </div>
-                <div style="font-size: 2rem; color: {color}; font-weight: 600; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
-                    {status}
+                <div style="display: inline-block; background: {color}1a; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                    <span style="font-size: 2rem; color: {color}; font-weight: 600; letter-spacing: 0.02em;">
+                        {status}
+                    </span>
                 </div>
-                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5; margin-bottom: 0.5rem;">
+                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5; margin-top: 0.5rem;">
                     {message}
-                </div>
-                <div style="color: #6e7681; font-size: 0.8125rem; margin-top: 0.5rem;">
-                    {f'Last updated: {time_ago}' if time_ago else ''}
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         
-        # Historical Values section
+        # Historical Values section - 2x2 Grid
+        now_html = _render_history_grid_item("Now", historical['now'])
+        yesterday_html = _render_history_grid_item("Yesterday", historical['yesterday'])
+        week_html = _render_history_grid_item("Last week", historical['last_week'])
+        month_html = _render_history_grid_item("Last month", historical['last_month'])
+        
         st.markdown(
             f"""
             <div style="margin-top: 1.5rem; padding: 1rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px;">
                 <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
                     HISTORICAL VALUES
                 </div>
-                {_render_history_item("Now", historical['now'])}
-                {_render_history_item("Yesterday", historical['yesterday'])}
-                {_render_history_item("Last week", historical['last_week'])}
-                {_render_history_item("Last month", historical['last_month'])}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    {now_html}
+                    {yesterday_html}
+                    {week_html}
+                    {month_html}
+                </div>
             </div>
             """,
             unsafe_allow_html=True
