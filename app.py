@@ -12,8 +12,7 @@ from data.calculator import RiskScoreCalculator
 from components.thermometer import render_thermometer
 from components.hot_tokens import render_hot_tokens
 from components.metrics_cards import render_metrics_dashboard
-from components.methodology import render_methodology_panel
-from utils.config import REFRESH_INTERVAL_SECONDS
+from utils.config import REFRESH_INTERVAL_SECONDS, RISK_SCORE_WEIGHTS
 from utils.helpers import get_time_until_next_refresh
 
 st.set_page_config(
@@ -71,7 +70,7 @@ def render_header(last_update_time):
         st.markdown(
             """
             <div class="header-title">
-                🌡️ MARKET MOOD MONITOR
+                MARKET MOOD MONITOR
             </div>
             """,
             unsafe_allow_html=True
@@ -89,7 +88,7 @@ def render_header(last_update_time):
         )
     
     with col3:
-        if st.button("🔄 Refresh Now", use_container_width=True):
+        if st.button("REFRESH", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
     
@@ -120,7 +119,19 @@ def main():
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    render_methodology_panel()
+    st.markdown(
+        f"""
+        <details class="methodology-footer">
+            <summary>How it works</summary>
+            <div class="methodology-content">
+                <p><strong>Formula:</strong> Risk Score = Fear & Greed ({RISK_SCORE_WEIGHTS['fear_greed']*100:.0f}%) + BTC Momentum ({RISK_SCORE_WEIGHTS['btc_momentum']*100:.0f}%) + Volume ({RISK_SCORE_WEIGHTS['volume_health']*100:.0f}%) + Breadth ({RISK_SCORE_WEIGHTS['market_breadth']*100:.0f}%)</p>
+                <p><strong>Interpretation:</strong> 0-30 = Risk Off. 60-100 = Risk On.</p>
+                <p><strong>Data:</strong> CoinGecko + Alternative.me. Updates every 10min.</p>
+            </div>
+        </details>
+        """,
+        unsafe_allow_html=True
+    )
     
     st.markdown(
         """

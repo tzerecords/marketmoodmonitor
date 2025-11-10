@@ -24,10 +24,9 @@ def render_fear_greed_card(fear_greed_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">🧠 Fear & Greed Index</div>
+                <div class="metric-title">Fear & Greed Index</div>
                 <div class="metric-value" style="color: {color};">{value}</div>
                 <div class="metric-label">{classification}</div>
-                <div class="metric-sublabel">Last 7 days: {' → '.join(map(str, history[:3]))}...</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -50,12 +49,11 @@ def render_btc_trend_card(btc_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">₿ Bitcoin Trend</div>
+                <div class="metric-title">Bitcoin Trend</div>
                 <div class="metric-value">${price:,.0f}</div>
                 <div class="metric-label" style="color: {color};">
                     {arrow} {format_percentage(change_24h)}
                 </div>
-                <div class="metric-sublabel">24h Change</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -75,10 +73,9 @@ def render_volume_card(global_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">📊 24h Volume</div>
+                <div class="metric-title">24h Volume</div>
                 <div class="metric-value">{volume_formatted}</div>
                 <div class="metric-label">Total Market</div>
-                <div class="metric-sublabel">Cryptocurrency Trading Volume</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -98,10 +95,9 @@ def render_dominance_card(global_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">🌐 Market Dominance</div>
+                <div class="metric-title">Market Dominance</div>
                 <div class="metric-value">{btc_dom:.1f}%</div>
                 <div class="metric-label">Bitcoin</div>
-                <div class="metric-sublabel">ETH: {eth_dom:.1f}% | Others: {100-btc_dom-eth_dom:.1f}%</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -117,7 +113,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     """
     st.markdown('<div class="metrics-section">', unsafe_allow_html=True)
     
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4, gap="large")
     
     with col1:
         render_fear_greed_card(market_data.get("fear_greed"))

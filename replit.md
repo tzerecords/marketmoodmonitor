@@ -10,7 +10,30 @@ The system aggregates Fear & Greed sentiment, Bitcoin momentum, trading volume h
 
 ## User Preferences
 
+### Communication Style
 Preferred communication style: Simple, everyday language.
+
+### Git Workflow
+**Manual Git Push Policy** - Agent does NOT automatically push to GitHub.
+
+**Workflow:**
+1. User provides feature request or bug fix
+2. Agent implements code changes and completes all tasks
+3. Agent confirms completion to user
+4. User reviews changes in running application
+5. **User manually pushes to GitHub** via UI button "Push branch as 'origin/main'" when satisfied
+6. GitHub updates → Perplexity.ai (user's project manager connected to GitHub) sees all changes
+
+**Repository:** https://github.com/tzerecords/marketmoodmonitor
+
+**DO NOT:**
+- Automatically run `git push` after completing tasks
+- Push to GitHub without user's explicit instruction
+
+**DO:**
+- Complete all code changes and thorough testing
+- Notify user when all tasks are done and ready for review
+- Let user control when changes go to GitHub
 
 ## System Architecture
 

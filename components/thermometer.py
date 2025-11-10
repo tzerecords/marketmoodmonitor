@@ -3,7 +3,43 @@ Risk Score Thermometer component with semicircular gauge visualization.
 """
 import streamlit as st
 import plotly.graph_objects as go
-from typing import Dict, Any
+from typing import Dict, Any, List
+
+
+def render_historical_sparkline(historical_scores: List[Dict[str, Any]]):
+    """
+    Renders 7-day mini chart below gauge.
+    
+    Args:
+        historical_scores: List of {date, score} dicts for last 7 days
+    """
+    if not historical_scores:
+        return
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=[d['date'] for d in historical_scores],
+        y=[d['score'] for d in historical_scores],
+        mode='lines',
+        line=dict(color='#3b82f6', width=2, shape='spline'),
+        fill='tozeroy',
+        fillcolor='rgba(59, 130, 246, 0.05)',
+        hovertemplate='%{y:.1f}<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        height=60,
+        margin=dict(l=0, r=0, t=5, b=0),
+        paper_bgcolor='transparent',
+        plot_bgcolor='transparent',
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False, range=[0, 100]),
+        showlegend=False,
+        transition={'duration': 500, 'easing': 'cubic-in-out'}
+    )
+    
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
 
 def render_thermometer(risk_data: Dict[str, Any]):
@@ -13,6 +49,8 @@ def render_thermometer(risk_data: Dict[str, Any]):
     Args:
         risk_data: Risk score calculation results
     """
+    from data.calculator import RiskScoreCalculator
+    
     score = risk_data.get("score", 50)
     status = risk_data.get("status", "Unknown")
     emoji = risk_data.get("emoji", "⚪")
@@ -22,8 +60,8 @@ def render_thermometer(risk_data: Dict[str, Any]):
     st.markdown(
         f"""
         <div style="text-align: center; padding: 2rem 0;">
-            <h1 style="color: #ffffff; font-size: 2.5rem; margin-bottom: 1rem;">
-                🌡️ MARKET PULSE THERMOMETER
+            <h1 style="color: #ffffff; font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: 0.05em;">
+                MARKET MOOD MONITOR
             </h1>
         </div>
         """,
@@ -87,3 +125,6 @@ def render_thermometer(risk_data: Dict[str, Any]):
         """,
         unsafe_allow_html=True
     )
+    
+    historical_data = RiskScoreCalculator.generate_synthetic_history(score, days=7)
+    render_historical_sparkline(historical_data)

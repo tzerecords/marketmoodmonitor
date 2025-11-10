@@ -2,8 +2,9 @@
 Risk Score calculation engine for Market Mood Monitor.
 Implements weighted multi-factor model combining Fear & Greed, BTC momentum, volume health, and market breadth.
 """
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import logging
+import random
 from datetime import datetime, timedelta
 
 from utils.config import RISK_SCORE_WEIGHTS, RISK_SCORE_THRESHOLDS
@@ -204,3 +205,40 @@ class RiskScoreCalculator:
             f"Market Breadth: {components.get('market_breadth', 0)}%. "
             f"Explain market conditions in one sentence."
         )
+    
+    @staticmethod
+    def generate_synthetic_history(current_score: float, days: int = 7) -> List[Dict[str, Any]]:
+        """
+        Generate realistic historical walk based on current score.
+        Uses mean reversion to avoid unrealistic spikes.
+        
+        For MVP v1.5 - Phase 2 will use PostgreSQL for real historical data.
+        
+        Args:
+            current_score: Current risk score (0-100)
+            days: Number of days to generate
+            
+        Returns:
+            List of {date, score} dicts for historical timeline
+        """
+        history = []
+        score = current_score
+        
+        for i in range(days, 0, -1):
+            date = datetime.now() - timedelta(days=i)
+            
+            drift_to_current = (current_score - score) * 0.3
+            noise = random.uniform(-3, 3)
+            score = max(0, min(100, score + drift_to_current + noise))
+            
+            history.append({
+                'date': date.strftime('%m/%d'),
+                'score': round(score, 1)
+            })
+        
+        history.append({
+            'date': 'Now',
+            'score': current_score
+        })
+        
+        return history

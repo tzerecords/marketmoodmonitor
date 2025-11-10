@@ -37,7 +37,7 @@ def render_hot_tokens(movers_data: Dict[str, List[Dict]]):
     st.markdown(
         f"""
         <div class="ticker-container">
-            <div class="ticker-title">🔥 TOP MOVERS (24H)</div>
+            <div class="ticker-title">TOP MOVERS ●</div>
             <div class="ticker-wrapper">
                 <div class="ticker-content">
                     {doubled_ticker}
