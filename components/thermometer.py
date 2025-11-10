@@ -31,15 +31,14 @@ def render_historical_sparkline(historical_scores: List[Dict[str, Any]]):
     fig.update_layout(
         height=60,
         margin=dict(l=0, r=0, t=5, b=0),
-        paper_bgcolor='transparent',
-        plot_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(visible=False),
         yaxis=dict(visible=False, range=[0, 100]),
-        showlegend=False,
-        transition={'duration': 500, 'easing': 'cubic-in-out'}
+        showlegend=False
     )
     
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
 
 
 def render_thermometer(risk_data: Dict[str, Any]):
