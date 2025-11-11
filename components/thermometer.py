@@ -9,52 +9,6 @@ from datetime import datetime
 from data.score_history import get_historical_values
 
 
-def _validate_html_tags(html: str) -> bool:
-    """Validate HTML tags are balanced."""
-    try:
-        opening = html.count('<div')
-        closing = html.count('</div>')
-        return opening == closing
-    except Exception:
-        return False
-
-
-def _render_history_row(label: str, data: Optional[Dict[str, Any]]) -> str:
-    """Render single history item as vertical row (Fear & Greed style)."""
-    if not data:
-        return f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d;">
-            <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
-            <span style="color: #6e7681; font-size: 0.875rem;">—</span>
-        </div>
-        """
-    
-    score = data['score']
-    status = data['status']
-    
-    # Color based on status
-    color_map = {
-        'Extreme Risk Off': '#ef4444',
-        'Risk Off': '#f97316',
-        'Neutral': '#eab308',
-        'Risk On': '#10b981',
-        'Extreme Risk On': '#22c55e'
-    }
-    color = color_map.get(status, '#8b949e')
-    
-    return f"""
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #21262d;">
-        <div>
-            <span style="color: #8b949e; font-size: 0.875rem; margin-right: 0.5rem;">{label}</span>
-            <span style="color: {color}; font-size: 0.875rem; font-weight: 600;">{status}</span>
-        </div>
-        <div style="background: {color}; color: #ffffff; font-size: 0.875rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 50px;">
-            {score}
-        </div>
-    </div>
-    """
-
-
 def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetime] = None):
     """
     Render asymmetric Risk Score thermometer.
@@ -75,13 +29,14 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     # Create asymmetric layout
     col_gauge, col_status = st.columns([0.4, 0.6], gap="large")
     
-    # LEFT: Gauge with pointer/needle
+    # LEFT: Gauge with prominent needle
     with col_gauge:
-        # Gauge with gray pointer/needle (Fear & Greed style)
+        # Gauge configuration with color-matched needle
         fig = go.Figure(go.Indicator(
             mode="gauge",
             value=score,
             domain={'x': [0, 1], 'y': [0, 1]},
+            number={'font': {'size': 0}},  # Hide number inside gauge
             gauge={
                 'axis': {
                     'range': [0, 100],
@@ -92,7 +47,10 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     'ticktext': ['0', '25', '50', '75', '100'],
                     'tickfont': {'size': 10, 'color': '#6e7681'}
                 },
-                'bar': {'color': 'rgba(0,0,0,0)', 'thickness': 0},  # Hide bar, show only pointer
+                'bar': {
+                    'color': color,
+                    'thickness': 0.25
+                },
                 'bgcolor': "#161b22",
                 'borderwidth': 1,
                 'bordercolor': "#21262d",
@@ -104,8 +62,11 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     {'range': [80, 100], 'color': '#1a2d24'},
                 ],
                 'threshold': {
-                    'line': {'color': '#8b949e', 'width': 4},  # Gray pointer/needle
-                    'thickness': 0.75,
+                    'line': {
+                        'color': color,
+                        'width': 4
+                    },
+                    'thickness': 0.95,
                     'value': score
                 }
             }
@@ -121,24 +82,12 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        # Score badge below gauge with subtle pulse animation
+        # Score badge below gauge - centered, elevated
         st.markdown(
             f"""
-            <style>
-                @keyframes scorePulse {{
-                    0%, 100% {{
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                        transform: scale(1);
-                    }}
-                    50% {{
-                        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-                        transform: scale(1.02);
-                    }}
-                }}
-            </style>
-            <div style="text-align: center; margin-top: -1rem;">
-                <div style="display: inline-block; background: {color}; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); animation: scorePulse 2s ease-in-out infinite;">
-                    <span style="font-size: 2.5rem; color: #ffffff; font-weight: 700; line-height: 1;">
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <div style="display: inline-block; background: {color}33; padding: 0.75rem 2rem; border-radius: 16px; border: 2px solid {color}66; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <span style="font-size: 3rem; color: {color}; font-weight: 700; line-height: 1.2;">
                         {score}
                     </span>
                 </div>
@@ -149,88 +98,94 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - HORIZONTAL COMPACT (Fear & Greed style)
-        # "Now: Fear" layout - emoji inline + status dominant with fade-in animation
-        status_html = f"""
-        <style>
-            @keyframes fadeIn {{
-                from {{ opacity: 0; }}
-                to {{ opacity: 1; }}
-            }}
-        </style>
-        <div style="padding: 1rem 0; animation: fadeIn 0.5s ease-out;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <span style="font-size: 2rem; line-height: 1;">{emoji}</span>
-                <div style="background: {color}1a; padding: 0.5rem 1.5rem; border-radius: 6px; border: 1px solid {color}40;">
-                    <span style="font-size: 2.5rem; color: {color}; font-weight: 700; letter-spacing: 0.05em; line-height: 1;">
-                        {status}
-                    </span>
+        # Status section - HORIZONTAL COMPACT layout
+        st.markdown(
+            f"""
+            <div style="padding: 1rem 0;">
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                    <span style="font-size: 1.5rem; line-height: 1; margin-right: 0.75rem;">{emoji}</span>
+                    <div style="background: {color}1a; padding: 0.5rem 1.5rem; border-radius: 8px; border: 1px solid {color}40;">
+                        <span style="font-size: 2rem; color: {color}; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1;">
+                            {status}
+                        </span>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; color: #ffffff; font-weight: 500; margin-top: 0.75rem; margin-bottom: 0.5rem;">
+                        {score}
+                    </div>
+                    <div style="color: #8b949e; font-size: 1rem; line-height: 1.5; margin-top: 0.5rem;">
+                        {message}
+                    </div>
                 </div>
             </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: #ffffff; font-weight: 700; margin-bottom: 0.5rem;">
-                    {score}
-                </div>
-                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
-                    {message}
-                </div>
-            </div>
-        </div>
-        """
+            """,
+            unsafe_allow_html=True
+        )
         
-        # Validate HTML before rendering
-        if _validate_html_tags(status_html):
-            st.markdown(status_html, unsafe_allow_html=True)
-        else:
-            st.error("Status rendering error - please refresh")
-        
-        # Historical Values section - SINGLE COLUMN VERTICAL (Fear & Greed style)
+        # Historical Values section - STREAMLIT NATIVE with 2x2 grid
         try:
-            now_row = _render_history_row("Now", historical.get('now'))
-            yesterday_row = _render_history_row("Yesterday", historical.get('yesterday'))
-            week_row = _render_history_row("Last week", historical.get('last_week'))
-            month_row = _render_history_row("Last month", historical.get('last_month'))
+            # Color map for status (Streamlit native colors)
+            color_map = {
+                'Extreme Risk Off': 'red',
+                'Risk Off': 'orange',
+                'Neutral': 'orange',
+                'Risk On': 'green',
+                'Extreme Risk On': 'green'
+            }
             
-            historical_html = f"""
-            <style>
-                @keyframes slideInUp {{
-                    from {{
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }}
-                    to {{
-                        opacity: 1;
-                        transform: translateY(0);
-                    }}
-                }}
-            </style>
-            <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; animation: slideInUp 0.4s ease-out;">
-                <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
-                    HISTORICAL VALUES
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    {now_row}
-                    {yesterday_row}
-                    {week_row}
-                    {month_row}
-                </div>
-            </div>
-            """
-            
-            # Validate HTML before rendering
-            if _validate_html_tags(historical_html):
-                st.markdown(historical_html, unsafe_allow_html=True)
-            else:
-                raise ValueError("HTML validation failed")
-                
-        except Exception as e:
+            # Wrapper for max-width
             st.markdown(
                 """
-                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; text-align: center;">
-                    <div style="color: #8b949e; font-size: 0.875rem; font-style: italic;">
-                        Historical data loading, please wait...
+                <div style="max-width: 800px; margin: 1.5rem auto 0 auto;">
+                    <div style="color: #8b949e; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
+                        HISTORICAL VALUES
                     </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+            
+            # Create 2x2 grid: Now/Yesterday LEFT, Last week/Last month RIGHT
+            col_left, col_right = st.columns(2)
+            
+            with col_left:
+                # Now
+                now_data = historical.get('now')
+                if now_data:
+                    st.metric("Now", f"{now_data['score']}", delta=None, delta_color="off")
+                    status_color = color_map.get(now_data['status'], 'gray')
+                    st.caption(f":{status_color}[{now_data['status']}]")
+                else:
+                    st.metric("Now", "—")
+                
+                # Yesterday
+                yesterday_data = historical.get('yesterday')
+                if yesterday_data:
+                    st.metric("Yesterday", f"{yesterday_data['score']}", delta=None, delta_color="off")
+                    status_color = color_map.get(yesterday_data['status'], 'gray')
+                    st.caption(f":{status_color}[{yesterday_data['status']}]")
+                else:
+                    st.metric("Yesterday", "—")
+            
+            with col_right:
+                # Last week
+                week_data = historical.get('last_week')
+                if week_data:
+                    st.metric("Last week", f"{week_data['score']}", delta=None, delta_color="off")
+                    status_color = color_map.get(week_data['status'], 'gray')
+                    st.caption(f":{status_color}[{week_data['status']}]")
+                else:
+                    st.metric("Last week", "—")
+                
+                # Last month
+                month_data = historical.get('last_month')
+                if month_data:
+                    st.metric("Last month", f"{month_data['score']}", delta=None, delta_color="off")
+                    status_color = color_map.get(month_data['status'], 'gray')
+                    st.caption(f":{status_color}[{month_data['status']}]")
+                else:
+                    st.metric("Last month", "—")
+                
+        except Exception as e:
+            st.info("Historical data is being aggregated")
