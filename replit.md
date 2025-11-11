@@ -168,9 +168,31 @@ The application uses a component-based architecture with modular UI elements:
 - **Logging:** Python's built-in `logging` module with INFO level for API tracking
 - **User Feedback:** Toast notifications on score updates (auto-refresh only, not manual refresh)
 
-## Recent Changes (v2.0 - Professional Redesign)
+## Recent Changes
 
-### November 10, 2025
+### November 11, 2025 (v2.1 - Critical UI/UX Fixes)
+
+**Post-Rollback Rendering Fixes:**
+- ✅ **Historical Values**: Migrated from custom HTML to native Streamlit components (`st.metric` + `st.markdown`) to eliminate HTML escaping issues (no more visible `</div>` tags)
+- ✅ **Status Layout**: Reorganized status section with centered max-width 600px container, subtle background, and clear hierarchy: emoji + status pill inline, score number centered, descriptive message below
+- ✅ **Tooltips**: Added browser-native tooltips (title attribute) with ⓘ icons to all 4 metrics cards (BTC Dominance, Total Market Cap, Altcoin Season, 24H Volume) for improved UX and accessibility
+- ✅ **Error Boundary**: Implemented global try-except in `main()` for graceful error handling with user-friendly fallback messages instead of red stack traces
+- ✅ **Material Icons Fix**: Added CSS rules to hide Material Icons fallback text ("keyboard_arrow_right", "keyboard_arrow_down") by setting font-size: 0 on icon classes
+- ✅ **Deprecation Warning**: Fixed Streamlit 1.38+ deprecation by replacing `use_container_width=True` with `width='stretch'` in Plotly chart rendering
+
+**Technical Details:**
+- All fixes architect-reviewed and approved with zero regressions
+- Refactored `components/thermometer.py` to use native Streamlit metrics with dynamic color coding from `utils/config.py` color map
+- Updated `components/metrics_cards.py` to include explanatory tooltips on card labels
+- Enhanced `assets/styles.css` with Material Icons fallback text hiding rules
+- Error boundary provides technical details in collapsible expander for debugging
+
+**Design Principles Maintained:**
+- Native Streamlit components over custom HTML for reliability and accessibility
+- Browser-native tooltips over custom implementations for performance
+- Professional color coding using existing design system (Risk Off: #f97316, Neutral: #eab308, Risk On: #10b981)
+
+### November 10, 2025 (v2.0 - Professional Redesign)
 
 **Major UI/UX Overhaul:**
 - ✅ Asymmetric hero layout (gauge left 40%, status + history right 60%)

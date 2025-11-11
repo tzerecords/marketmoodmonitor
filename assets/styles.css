@@ -17,6 +17,30 @@
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
+/* Hide Material Icons fallback text */
+.material-icons-sharp,
+.material-icons,
+span[data-baseweb="icon"],
+svg[data-baseweb="icon"] {
+    font-size: 0 !important;
+}
+
+/* Hide specific icon text fallbacks */
+.streamlit-expanderHeader::before,
+.streamlit-expanderHeader::after {
+    content: '' !important;
+}
+
+/* Remove any text nodes that say "keyboard_arrow_*" */
+*:not(code):not(pre) {
+    text-rendering: optimizeLegibility;
+}
+
+button[kind="header"]::after,
+button[kind="header"]::before {
+    display: none !important;
+}
+
 /* Typography - System Font Stack */
 body, .stApp {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
