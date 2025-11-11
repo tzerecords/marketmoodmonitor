@@ -112,9 +112,9 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     {status}
                 </span>
             </div>
-            <!-- Segunda línea: score centrado -->
+            <!-- Segunda línea: score centrado con tooltip -->
             <div style="font-size: 2.5rem; font-weight: 600; color: {color}; margin-bottom: 0.75rem;">
-                {score}
+                {score} <span style="font-size: 1rem; color: #8b949e; cursor: help; margin-left: 0.5rem;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
             </div>
             <!-- Tercera línea: mensaje descriptivo -->
             <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
