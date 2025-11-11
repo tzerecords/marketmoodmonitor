@@ -72,7 +72,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             }
         ))
         
-        # Add professional score badge annotation with subtle background
+        # Add professional score badge annotation with VERY subtle pill-like background
         fig.add_annotation(
             text=f'<b>{score:.1f}</b>',
             x=0.5, 
@@ -80,13 +80,13 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             showarrow=False,
             font=dict(
                 size=36,  # Smaller than right score (40px) for visual hierarchy
-                color=hex_to_rgba(color, 0.5),  # 50% opacity
+                color=hex_to_rgba(color, 0.5),  # 50% opacity on text
                 family='system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
             ),
-            bgcolor=hex_to_rgba(color, 0.1),  # Subtle badge background
-            borderpad=10,
-            bordercolor=hex_to_rgba(color, 0.2),
-            borderwidth=2
+            bgcolor=hex_to_rgba(color, 0.05),  # VERY subtle background - almost invisible
+            borderpad=12,  # More padding for pill shape
+            bordercolor=hex_to_rgba(color, 0.08),  # Border almost invisible
+            borderwidth=1.5  # Thinner border
         )
         
         fig.update_layout(
