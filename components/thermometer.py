@@ -152,47 +152,59 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             
             # Now
             with col1:
-                if historical.get('now'):
-                    now_data = historical['now']
+                now_data = historical.get('now')
+                if now_data and now_data.get('score') is not None:
                     st.metric(label="Now", value=f"{now_data['score']}")
                     status_color = color_map.get(now_data['status'], '#8b949e')
                     st.markdown(
                         f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{now_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
+                else:
+                    st.metric(label="Now", value="—")
+                    st.caption('Collecting data')
             
             # Yesterday
             with col2:
-                if historical.get('yesterday'):
-                    yesterday_data = historical['yesterday']
+                yesterday_data = historical.get('yesterday')
+                if yesterday_data and yesterday_data.get('score') is not None:
                     st.metric(label="Yesterday", value=f"{yesterday_data['score']}")
                     status_color = color_map.get(yesterday_data['status'], '#8b949e')
                     st.markdown(
                         f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{yesterday_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
+                else:
+                    st.metric(label="Yesterday", value="—")
+                    st.caption('Collecting data')
             
             # Last week
             with col3:
-                if historical.get('last_week'):
-                    week_data = historical['last_week']
+                week_data = historical.get('last_week')
+                if week_data and week_data.get('score') is not None:
                     st.metric(label="Last week", value=f"{week_data['score']}")
                     status_color = color_map.get(week_data['status'], '#8b949e')
                     st.markdown(
                         f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{week_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
+                else:
+                    st.metric(label="Last week", value="—")
+                    st.caption('Collecting data')
             
             # Last month
             with col4:
-                if historical.get('last_month'):
-                    month_data = historical['last_month']
+                month_data = historical.get('last_month')
+                if month_data and month_data.get('score') is not None:
                     st.metric(label="Last month", value=f"{month_data['score']}")
                     status_color = color_map.get(month_data['status'], '#8b949e')
                     st.markdown(
                         f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{month_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
+                else:
+                    st.metric(label="Last month", value="—")
+                    st.caption('Collecting data')
                 
         except Exception as e:
             st.info('📊 Aggregating historical market data, please wait...')

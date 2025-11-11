@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T09:50:37.089061",
+  "timestamp": "2025-11-11T09:52:40.865792",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -22,16 +22,16 @@
     "active_cryptocurrencies": 19411
   },
   "bitcoin": {
-    "price_usd": 104991,
-    "volume_24h_usd": 68992677624.48785,
-    "price_change_24h": -1.4088746000160124
+    "price_usd": 105011,
+    "volume_24h_usd": 70312069123.6663,
+    "price_change_24h": -1.3474405130026768
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": 19.32827
+        "price_change_24h": 19.35376
       },
       {
         "symbol": "FIGR_HELOC",
@@ -39,38 +39,38 @@
         "price_change_24h": 1.77701
       },
       {
-        "symbol": "PAXG",
-        "name": "PAX Gold",
-        "price_change_24h": 1.49821
-      },
-      {
         "symbol": "XAUT",
         "name": "Tether Gold",
-        "price_change_24h": 1.45796
+        "price_change_24h": 1.56534
+      },
+      {
+        "symbol": "PAXG",
+        "name": "PAX Gold",
+        "price_change_24h": 1.49867
       }
     ],
     "losers": [
       {
         "symbol": "NEAR",
         "name": "NEAR Protocol",
-        "price_change_24h": -11.00119
+        "price_change_24h": -10.99328
       },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -12.41163
+        "price_change_24h": -12.38164
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -26.8415
+        "price_change_24h": -26.83314
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -30.57695
+        "price_change_24h": -30.66407
       }
     ]
   },
-  "market_breadth": 19.0
+  "market_breadth": 22.0
 }
