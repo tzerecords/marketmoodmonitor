@@ -101,7 +101,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - Centered and organized layout
+        # Status section - Badge circular + pill badge (patrón consistente con Historical Values)
         status_html = f"""
         <style>
             @keyframes fadeIn {{
@@ -110,20 +110,25 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             }}
         </style>
         <div style="text-align: center; max-width: 600px; margin: 2rem auto; padding: 1.5rem; background: rgba(30, 35, 45, 0.3); border-radius: 12px; animation: fadeIn 0.5s ease-out;">
-            <!-- Primera línea: emoji + status pill inline -->
-            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem; margin-right: 0.75rem;">{emoji}</span>
-                <span style="background: {color}26; color: {color}; padding: 0.5rem 1.5rem; border-radius: 8px; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
-                    {status}
-                </span>
-            </div>
-            <!-- Segunda línea: score centrado con tooltip -->
-            <div style="font-size: 2.5rem; font-weight: 600; color: {color}; margin-bottom: 0.75rem;">
-                {score} <span style="font-size: 1rem; color: #8b949e; cursor: help; margin-left: 0.5rem;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
-            </div>
-            <!-- Tercera línea: mensaje descriptivo -->
-            <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
-                {message}
+            <!-- Layout horizontal: badge circular + status info -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 1rem;">
+                <!-- Badge circular con score (72x72px) -->
+                <div style="background: {color}; border-radius: 50%; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); flex-shrink: 0;">
+                    <span style="color: white; font-size: 1.5rem; font-weight: 700;">{score:.1f}</span>
+                </div>
+                <!-- Status info (pill + tooltip) -->
+                <div style="text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                        <span style="font-size: 1.25rem;">{emoji}</span>
+                        <span style="background: {color}26; color: {color}; padding: 0.4rem 1.25rem; border-radius: 8px; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
+                            {status}
+                        </span>
+                        <span style="font-size: 0.875rem; color: #8b949e; cursor: help;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
+                    </div>
+                    <div style="color: #8b949e; font-size: 0.875rem; line-height: 1.5; margin-left: 2rem;">
+                        {message}
+                    </div>
+                </div>
             </div>
         </div>
         """
