@@ -141,7 +141,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         """, unsafe_allow_html=True)
         
         # Color map
-        color_map = {
+        hist_color_map = {
             'Extreme Risk Off': '#ef4444',
             'Risk Off': '#f97316', 
             'Neutral': '#eab308',
@@ -162,18 +162,18 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         for label, data in historical_items:
             if data and data.get('score') is not None:
-                score = data['score']
-                status = data['status']
-                status_color = color_map.get(status, '#f97316')
+                hist_score = data['score']
+                hist_status = data['status']
+                hist_color = hist_color_map.get(hist_status, '#f97316')
                 
                 st.markdown(f"""
                 <div style="display: grid; grid-template-columns: 120px auto 50px 130px; gap: 1.5rem; align-items: center; padding: 0.4rem 0.75rem; border-bottom: 1px solid rgba(48, 54, 61, 0.2);">
                     <span style="color: #c9d1d9; font-size: 0.875rem; font-weight: 500;">{label}</span>
                     <div></div>
-                    <div style="background: {status_color}; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-                        <span style="color: white; font-size: 0.875rem; font-weight: 700;">{int(score)}</span>
+                    <div style="background: {hist_color}; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                        <span style="color: white; font-size: 0.875rem; font-weight: 700;">{int(hist_score)}</span>
                     </div>
-                    <span style="color: {status_color}; font-size: 0.8rem; font-weight: 600; text-align: right;">{status}</span>
+                    <span style="color: {hist_color}; font-size: 0.8rem; font-weight: 600; text-align: right;">{hist_status}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
