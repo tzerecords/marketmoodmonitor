@@ -150,9 +150,9 @@ def main():
         render_thermometer(risk_score_data, st.session_state.last_fetch_time)
         st.markdown('<div style="margin-bottom: 0.75rem;"></div>', unsafe_allow_html=True)
         
-        # 2. Metrics cards (4 cards tight) - margin-bottom: 1.5rem
+        # 2. Metrics cards (4 cards tight) - margin-bottom: 0.5rem
         render_metrics_dashboard(market_data)
-        st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="margin-bottom: 0.5rem;"></div>', unsafe_allow_html=True)
         
         # 3. Top movers (horizontal single row) - margin-bottom: 1.5rem
         if market_data.get("top_movers"):

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T10:55:36.334123",
+  "timestamp": "2025-11-11T10:09:30.239150",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -15,62 +15,62 @@
     ]
   },
   "global_market": {
-    "total_market_cap_usd": 3632654236718.8765,
-    "total_volume_24h_usd": 197173114887.0327,
-    "btc_dominance": 57.76345225933988,
-    "eth_dominance": 11.815713470244948,
-    "active_cryptocurrencies": 19413
+    "total_market_cap_usd": 3630136947062.0073,
+    "total_volume_24h_usd": 196804953871.50458,
+    "btc_dominance": 57.73494358458884,
+    "eth_dominance": 11.83483304237857,
+    "active_cryptocurrencies": 19412
   },
   "bitcoin": {
-    "price_usd": 105054,
-    "volume_24h_usd": 69521695987.19328,
-    "price_change_24h": -0.9626509999441429
+    "price_usd": 105047,
+    "volume_24h_usd": 69728810153.04124,
+    "price_change_24h": -1.205991106778449
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": 23.17358
-      },
-      {
-        "symbol": "TRUMP",
-        "name": "Official Trump",
-        "price_change_24h": 3.12458
-      },
-      {
-        "symbol": "IP",
-        "name": "Story",
-        "price_change_24h": 2.58528
+        "price_change_24h": 19.73392
       },
       {
         "symbol": "FIGR_HELOC",
         "name": "Figure Heloc",
         "price_change_24h": 1.77701
+      },
+      {
+        "symbol": "TRUMP",
+        "name": "Official Trump",
+        "price_change_24h": 1.62055
+      },
+      {
+        "symbol": "XAUT",
+        "name": "Tether Gold",
+        "price_change_24h": 1.43153
       }
     ],
     "losers": [
       {
-        "symbol": "XMR",
-        "name": "Monero",
-        "price_change_24h": -8.71602
-      },
-      {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -9.72484
+        "price_change_24h": -11.86409
+      },
+      {
+        "symbol": "NEAR",
+        "name": "NEAR Protocol",
+        "price_change_24h": -12.48336
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -23.10934
+        "price_change_24h": -25.82163
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -26.95799
+        "price_change_24h": -28.48114
       }
     ]
   },
-  "market_breadth": 28.000000000000004
+  "market_breadth": 22.0
 }
