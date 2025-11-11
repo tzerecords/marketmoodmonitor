@@ -79,14 +79,14 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             y=0.35,  # Centered in gauge
             showarrow=False,
             font=dict(
-                size=36,  # Smaller than right score (40px) for visual hierarchy
+                size=28,  # Smaller - más discreto
                 color=hex_to_rgba(color, 0.5),  # 50% opacity on text
                 family='system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
             ),
-            bgcolor=hex_to_rgba(color, 0.05),  # VERY subtle background - almost invisible
-            borderpad=12,  # More padding for pill shape
-            bordercolor=hex_to_rgba(color, 0.08),  # Border almost invisible
-            borderwidth=1.5  # Thinner border
+            bgcolor=hex_to_rgba(color, 0.04),  # Ultra subtle background
+            borderpad=8,  # Compact padding
+            bordercolor=hex_to_rgba(color, 0.06),  # Border barely visible
+            borderwidth=1  # Very thin border
         )
         
         fig.update_layout(
