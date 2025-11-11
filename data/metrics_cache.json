@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T10:53:48.909702",
+  "timestamp": "2025-11-11T10:55:36.334123",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -22,26 +22,26 @@
     "active_cryptocurrencies": 19413
   },
   "bitcoin": {
-    "price_usd": 105063,
-    "volume_24h_usd": 69847712668.10297,
-    "price_change_24h": -0.9540460306157614
+    "price_usd": 105054,
+    "volume_24h_usd": 69521695987.19328,
+    "price_change_24h": -0.9626509999441429
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": 23.43206
+        "price_change_24h": 23.17358
       },
       {
         "symbol": "TRUMP",
         "name": "Official Trump",
-        "price_change_24h": 3.09459
+        "price_change_24h": 3.12458
       },
       {
         "symbol": "IP",
         "name": "Story",
-        "price_change_24h": 2.66065
+        "price_change_24h": 2.58528
       },
       {
         "symbol": "FIGR_HELOC",
@@ -53,24 +53,24 @@
       {
         "symbol": "XMR",
         "name": "Monero",
-        "price_change_24h": -8.79366
+        "price_change_24h": -8.71602
       },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -9.64596
+        "price_change_24h": -9.72484
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -23.09324
+        "price_change_24h": -23.10934
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -26.94011
+        "price_change_24h": -26.95799
       }
     ]
   },
-  "market_breadth": 26.0
+  "market_breadth": 28.000000000000004
 }
