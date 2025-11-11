@@ -90,6 +90,24 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### November 11, 2025 (v2.5 - Historical Values Compact Redesign)
+
+**Historical Values Final Refinement:**
+- ✅ **Simplified Layout**: Changed from CSS Grid to Flexbox with `justify-content: space-between` to avoid potential bugs
+- ✅ **Compact Badge**: Reduced circular badges from 48px to 36px for tighter spacing
+- ✅ **Max-width Adjustment**: Changed from 1000px to 900px for better desktop proportions
+- ✅ **Visual Refinements**:
+  - Added `flex-shrink: 0` to badges to prevent deformation
+  - Added `box-shadow: 0 1px 4px rgba(0,0,0,0.1)` to badges for depth
+  - Increased label font-weight to 500 for better readability
+  - Tighter padding: 0.4rem vertical (vs 0.75rem)
+  - Lighter border-bottom: rgba 0.2 opacity (vs 0.3)
+- ✅ **No Emojis**: Removed emoji visual clutter for cleaner, more professional look
+- ✅ **Bug Prevention**: Eliminated problematic `<div style="flex: 1;">` pattern
+
+**Gauge Badge Refinement (from previous session):**
+- ✅ Ultra-subtle badge inside gauge: 28px font, alpha 0.04 background, 0.06 border, 1px border-width
+
 ### November 11, 2025 (v2.4 - Production-Ready Final Polish)
 
 **Validaciones Críticas Pre-Production:**
