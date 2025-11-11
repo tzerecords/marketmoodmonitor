@@ -125,66 +125,6 @@
       "score": 46.9,
       "status": "Neutral",
       "message": "Wait for confirmation - No clear directional bias"
-    },
-    {
-      "timestamp": "2025-11-11T07:43:28.042139",
-      "score": 37.4,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T07:56:37.506117",
-      "score": 37.1,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T07:56:39.218876",
-      "score": 37.1,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:11:49.042983",
-      "score": 37.0,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:13:11.104081",
-      "score": 37.4,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:14:47.315382",
-      "score": 37.0,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:15:56.810061",
-      "score": 37.0,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:18:17.154202",
-      "score": 36.6,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:18:54.976752",
-      "score": 43.4,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
-    },
-    {
-      "timestamp": "2025-11-11T08:19:12.841691",
-      "score": 37.4,
-      "status": "Risk Off",
-      "message": "Cautious positioning - Defensive stance recommended"
     }
   ]
 }

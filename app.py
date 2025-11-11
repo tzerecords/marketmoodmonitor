@@ -163,7 +163,8 @@ def main():
             - **Caching layer:** `st.cache_data` decorators with 10min TTL
             - **APIs:** CoinGecko for market data, Alternative.me for sentiment
             - **Rate limiting:** 50 req/min with exponential backoff
-            - **Data persistence:** JSON append-only logs with planned SQL migration for scalability
+            - **Persistence:** JSON append-only logs with 90-day retention
+            - **SQL:** Query layer prepared for future PostgreSQL/Snowflake integration
             
             **Methodology**
             

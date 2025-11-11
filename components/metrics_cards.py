@@ -1,6 +1,6 @@
 """
 Professional metrics cards: BTC Dominance, Market Cap, Altcoin Season, Volume.
-Clean numbers with tooltips, no charts.
+Clean numbers with deltas, no charts.
 """
 import streamlit as st
 from typing import Dict, Any
@@ -91,7 +91,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    TOTAL MARKET CAP <span class="info-icon" title="Total market capitalization of all cryptocurrencies">ⓘ</span>
+                    TOTAL MARKET CAP
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {mcap_display}
@@ -106,7 +106,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    ALTCOIN SEASON <span class="info-icon" title="Percentage of top 50 coins outperforming BTC in 24h. >75% indicates altcoin season">ⓘ</span>
+                    ALTCOIN SEASON
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {altcoin_season:.0f}%
@@ -121,7 +121,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
                 <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    24H VOLUME <span class="info-icon" title="Total trading volume across all crypto markets in last 24 hours">ⓘ</span>
+                    24H VOLUME
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {format_large_number(volume_24h)}
