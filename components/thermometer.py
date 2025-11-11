@@ -29,31 +29,19 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     # Create asymmetric layout
     col_gauge, col_status = st.columns([0.4, 0.6], gap="large")
     
-    # LEFT: Gauge with pointer/needle + score inside
+    # LEFT: Gauge with pointer/needle + score badge inside
     with col_gauge:
-        # Extract RGB from hex color for opacity
-        color_rgb_map = {
-            '#ef4444': '239, 68, 68',      # Extreme Risk Off
-            '#f97316': '249, 115, 22',     # Risk Off
-            '#eab308': '234, 179, 8',      # Neutral
-            '#10b981': '16, 185, 129',     # Risk On
-            '#22c55e': '34, 197, 94',      # Extreme Risk On
-        }
-        rgba_color = f"rgba({color_rgb_map.get(color, '128, 128, 128')}, 0.5)"
+        # Helper function to convert hex to rgba
+        def hex_to_rgba(hex_color: str, alpha: float) -> str:
+            """Convert hex color to rgba with specified alpha."""
+            hex_color = hex_color.lstrip('#')
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            return f'rgba({r}, {g}, {b}, {alpha})'
         
-        # Gauge with gray pointer/needle (Fear & Greed style) + score inside
+        # Gauge with gray pointer/needle (Fear & Greed style)
         fig = go.Figure(go.Indicator(
-            mode="gauge+number",  # Show both gauge and number
+            mode="gauge",  # Gauge only, score added via annotation
             value=score,
-            number={
-                'font': {
-                    'size': 48,  # Medium size for subtlety
-                    'color': rgba_color,  # 50% opacity for subtleness
-                    'family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-                },
-                'suffix': '',
-                'valueformat': '.1f'
-            },
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={
                 'axis': {
@@ -63,7 +51,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                     'tickmode': 'array',
                     'tickvals': [0, 25, 50, 75, 100],
                     'ticktext': ['0', '25', '50', '75', '100'],
-                    'tickfont': {'size': 10, 'color': '#6e7681'}
+                    'tickfont': {'size': 11, 'color': '#8b949e'}  # Increased for readability
                 },
                 'bar': {'color': 'rgba(0,0,0,0)', 'thickness': 0},  # Hide bar, show only pointer
                 'bgcolor': "#161b22",
@@ -83,6 +71,23 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                 }
             }
         ))
+        
+        # Add professional score badge annotation with subtle background
+        fig.add_annotation(
+            text=f'<b>{score:.1f}</b>',
+            x=0.5, 
+            y=0.35,  # Centered in gauge
+            showarrow=False,
+            font=dict(
+                size=36,  # Smaller than right score (40px) for visual hierarchy
+                color=hex_to_rgba(color, 0.5),  # 50% opacity
+                family='system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
+            ),
+            bgcolor=hex_to_rgba(color, 0.1),  # Subtle badge background
+            borderpad=10,
+            bordercolor=hex_to_rgba(color, 0.2),
+            borderwidth=2
+        )
         
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
