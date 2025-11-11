@@ -36,7 +36,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             mode="gauge",
             value=score,
             domain={'x': [0, 1], 'y': [0, 1]},
-            number={'font': {'size': 0}},  # Hide number inside gauge
+            number={'font': {'size': 1, 'color': 'rgba(0,0,0,0)'}},  # Hide number inside gauge
             gauge={
                 'axis': {
                     'range': [0, 100],
