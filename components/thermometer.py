@@ -114,7 +114,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 1rem;">
                 <!-- Badge circular con score (72x72px) -->
                 <div style="background: {color}; border-radius: 50%; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); flex-shrink: 0;">
-                    <span style="color: white; font-size: 1.5rem; font-weight: 700;">{score:.1f}</span>
+                    <span style="color: white; font-size: 1.5rem; font-weight: 700;">{int(score)}</span>
                 </div>
                 <!-- Status info (pill + tooltip) -->
                 <div style="text-align: left;">
@@ -124,7 +124,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                         </span>
                         <span style="font-size: 0.875rem; color: #8b949e; cursor: help;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
                     </div>
-                    <div style="color: #8b949e; font-size: 0.875rem; line-height: 1.5; margin-left: 2rem;">
+                    <div style="color: #8b949e; font-size: 0.875rem; line-height: 1.5;">
                         {message}
                     </div>
                 </div>
