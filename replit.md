@@ -90,6 +90,20 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### November 11, 2025 (v2.8 - 1080p No-Scroll Spacing Optimization)
+
+**Reduced Vertical Spacing for Full Dashboard Viewport Fit:**
+- ✅ **Thermometer → Metrics**: Changed from 0.75rem to 1.25rem for better breathing room
+- ✅ **Metrics → Top Movers**: Changed from 0.5rem to 1.25rem for consistent spacing rhythm
+- ✅ **Top Movers → About**: Maintained 1.5rem for section separation
+- ✅ **Comments Updated**: Layout comments now reference "1080p no-scroll" optimization goal
+- ✅ **Visual Balance**: Tighter spacing maintains professional feel without cramped appearance
+
+**1080p Viewport Validation:**
+- Entire dashboard (header → thermometer → metrics → top movers → about) fits in 1920×1080 without vertical scroll
+- Spacing rhythm: 1.25rem → 1.25rem → 1.5rem creates consistent visual flow
+- Architect-reviewed with zero regressions
+
 ### November 11, 2025 (v2.7 - Historical Values Vertical Redesign)
 
 **Historical Values Vertical List (Fear & Greed Style):**
