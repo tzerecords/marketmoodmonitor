@@ -90,19 +90,32 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### November 11, 2025 (v2.7 - Historical Values Vertical Redesign)
+
+**Historical Values Vertical List (Fear & Greed Style):**
+- ✅ **Vertical Layout**: Changed from horizontal to vertical list with 2 columns (Label left | Badge + Status right)
+- ✅ **Circular Badges**: All badges 48x48px (consistent sizing across all rows)
+- ✅ **Improved Contrast**: Font-weight 800 + text-shadow (0 1px 2px rgba(0,0,0,0.3)) for better number visibility
+- ✅ **Single Container**: Header and rows in one container (rgba(30, 35, 45, 0.2) background, 12px border-radius)
+- ✅ **Max-width 700px**: Centered container prevents oversizing on desktop
+- ✅ **Proper Spacing**: 0.75rem vertical padding per row, 0.75rem gap between badge and status text
+- ✅ **Border Separators**: Subtle border-bottom (rgba 0.3 opacity) between rows
+- ✅ **Pattern Consistency**: Same badge circular + text pattern as status section, just smaller size
+
+**Visual Continuity Achieved:**
+- Status section: 72px badge → Historical Values: 48px badges = Clear size hierarchy
+- Both sections use identical pattern: circular badge for number + text flotando for status
+
 ### November 11, 2025 (v2.6 - Status Section Visual Consistency)
 
 **Status Section Redesign for Visual Continuity:**
 - ✅ **Circular Badge Pattern**: Moved score to 72x72px circular badge (matching Historical Values pattern)
-- ✅ **Layout Standardization**: Badge circular (left) + pill badge with status text (right) + emoji + tooltip
-- ✅ **Size Hierarchy**: 72px status badge → 36px historical badges creates clear visual hierarchy
+- ✅ **Layout Standardization**: Badge circular (left) + pill badge with status text (right) + emoji inside pill
+- ✅ **Size Hierarchy**: 72px status badge → 48px historical badges creates clear visual hierarchy
 - ✅ **Depth Enhancement**: Box-shadow (0 2px 8px rgba(0,0,0,0.15)) on circular badge
 - ✅ **Message Indentation**: Descriptive message indented 2rem for alignment
 - ✅ **Flexbox Implementation**: Gap 1.5rem for proper spacing, text-align left for status info
-- ✅ **Design Philosophy**: Standardized pattern across dashboard - circular badges for numbers, pills/text for status
-
-**Visual Continuity Achieved:**
-- Header emoji 🟠 → Gauge badge (28px subtle) → Status circular badge (72px prominent) → Historical circular badges (36px compact) = Cohesive design language
+- ✅ **Emoji Position**: Moved emoji inside pill badge (right side) for cleaner layout
 
 ### November 11, 2025 (v2.5 - Historical Values Compact Redesign)
 
