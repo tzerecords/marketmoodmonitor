@@ -119,9 +119,8 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                 <!-- Status info (pill + tooltip) -->
                 <div style="text-align: left;">
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                        <span style="font-size: 1.25rem;">{emoji}</span>
-                        <span style="background: {color}26; color: {color}; padding: 0.4rem 1.25rem; border-radius: 8px; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
-                            {status}
+                        <span style="background: {color}26; color: {color}; padding: 0.4rem 1.25rem; border-radius: 8px; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40; display: flex; align-items: center; gap: 0.5rem;">
+                            {status} <span style="font-size: 1.25rem;">{emoji}</span>
                         </span>
                         <span style="font-size: 0.875rem; color: #8b949e; cursor: help;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
                     </div>
