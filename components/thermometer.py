@@ -130,7 +130,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values section - Single row horizontal layout (Alternative.me style)
+        # Historical Values section - VERTICAL list (Alternative.me style)
         # Color map for dynamic status colors
         color_map = {
             'Extreme Risk Off': '#ef4444',
@@ -143,68 +143,38 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         try:
             st.markdown('<div style="margin-top: 1.5rem;"></div>', unsafe_allow_html=True)
             st.markdown(
-                '<p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 0.5rem; text-transform: uppercase; text-align: center;">Historical Values</p>',
+                '<p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Historical Values</p>',
                 unsafe_allow_html=True
             )
             
-            # Single horizontal row with 4 columns
-            col1, col2, col3, col4 = st.columns(4, gap="small")
-            
-            # Now
-            with col1:
-                now_data = historical.get('now')
-                if now_data and now_data.get('score') is not None:
-                    st.metric(label="Now", value=f"{now_data['score']}")
-                    status_color = color_map.get(now_data['status'], '#8b949e')
-                    st.markdown(
-                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{now_data["status"]}</p>',
-                        unsafe_allow_html=True
-                    )
+            # Helper function to render each vertical row
+            def render_history_row(label: str, data: Optional[Dict]) -> None:
+                if data and data.get('score') is not None:
+                    score = data['score']
+                    status = data['status']
+                    status_color = color_map.get(status, '#8b949e')
+                    
+                    st.markdown(f'''
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(33, 38, 45, 0.5);">
+                        <span style="color: #8b949e; font-size: 0.875rem; min-width: 80px;">{label}</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; flex: 1; text-align: center;">{score:.1f}</span>
+                        <span style="color: {status_color}; font-size: 0.875rem; min-width: 100px; text-align: right;">{status}</span>
+                    </div>
+                    ''', unsafe_allow_html=True)
                 else:
-                    st.metric(label="Now", value="—")
-                    st.caption('Collecting data')
+                    st.markdown(f'''
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(33, 38, 45, 0.5);">
+                        <span style="color: #8b949e; font-size: 0.875rem; min-width: 80px;">{label}</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: #8b949e; flex: 1; text-align: center;">—</span>
+                        <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 100px; text-align: right;">Collecting data</span>
+                    </div>
+                    ''', unsafe_allow_html=True)
             
-            # Yesterday
-            with col2:
-                yesterday_data = historical.get('yesterday')
-                if yesterday_data and yesterday_data.get('score') is not None:
-                    st.metric(label="Yesterday", value=f"{yesterday_data['score']}")
-                    status_color = color_map.get(yesterday_data['status'], '#8b949e')
-                    st.markdown(
-                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{yesterday_data["status"]}</p>',
-                        unsafe_allow_html=True
-                    )
-                else:
-                    st.metric(label="Yesterday", value="—")
-                    st.caption('Collecting data')
-            
-            # Last week
-            with col3:
-                week_data = historical.get('last_week')
-                if week_data and week_data.get('score') is not None:
-                    st.metric(label="Last week", value=f"{week_data['score']}")
-                    status_color = color_map.get(week_data['status'], '#8b949e')
-                    st.markdown(
-                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{week_data["status"]}</p>',
-                        unsafe_allow_html=True
-                    )
-                else:
-                    st.metric(label="Last week", value="—")
-                    st.caption('Collecting data')
-            
-            # Last month
-            with col4:
-                month_data = historical.get('last_month')
-                if month_data and month_data.get('score') is not None:
-                    st.metric(label="Last month", value=f"{month_data['score']}")
-                    status_color = color_map.get(month_data['status'], '#8b949e')
-                    st.markdown(
-                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{month_data["status"]}</p>',
-                        unsafe_allow_html=True
-                    )
-                else:
-                    st.metric(label="Last month", value="—")
-                    st.caption('Collecting data')
+            # Render 4 vertical rows
+            render_history_row("Now", historical.get('now'))
+            render_history_row("Yesterday", historical.get('yesterday'))
+            render_history_row("Last week", historical.get('last_week'))
+            render_history_row("Last month", historical.get('last_month'))
                 
         except Exception as e:
             st.info('📊 Aggregating historical market data, please wait...')

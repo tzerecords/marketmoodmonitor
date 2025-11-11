@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T09:58:38.548685",
+  "timestamp": "2025-11-11T09:59:35.299693",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -41,29 +41,29 @@
       {
         "symbol": "XAUT",
         "name": "Tether Gold",
-        "price_change_24h": 1.51079
+        "price_change_24h": 1.61075
       },
       {
         "symbol": "PAXG",
         "name": "PAX Gold",
-        "price_change_24h": 1.50167
+        "price_change_24h": 1.52908
       }
     ],
     "losers": [
-      {
-        "symbol": "NEAR",
-        "name": "NEAR Protocol",
-        "price_change_24h": -11.75954
-      },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
         "price_change_24h": -11.99749
       },
       {
+        "symbol": "NEAR",
+        "name": "NEAR Protocol",
+        "price_change_24h": -12.63735
+      },
+      {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -26.32088
+        "price_change_24h": -26.32268
       },
       {
         "symbol": "CC",
@@ -72,5 +72,5 @@
       }
     ]
   },
-  "market_breadth": 21.0
+  "market_breadth": 22.0
 }
