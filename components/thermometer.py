@@ -72,22 +72,25 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             }
         ))
         
-        # Add professional score badge annotation with VERY subtle pill-like background
+        # Add professional score badge annotation with pill-like background
         fig.add_annotation(
             text=f'<b>{score:.1f}</b>',
             x=0.5, 
-            y=0.35,  # Centered in gauge
+            y=0.25,  # Positioned lower in gauge
             showarrow=False,
             font=dict(
-                size=28,  # Smaller - más discreto
-                color=hex_to_rgba(color, 0.5),  # 50% opacity on text
-                family='system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
+                size=30,  # Slightly larger but still subtle
+                color=hex_to_rgba(color, 0.6),  # 60% opacity on text
+                family='system-ui, -apple-system, "Segoe UI", sans-serif'
             ),
-            bgcolor=hex_to_rgba(color, 0.04),  # Ultra subtle background
-            borderpad=8,  # Compact padding
+            bgcolor=hex_to_rgba(color, 0.03),  # Ultra subtle background
+            borderpad=14,  # Pill shape padding
             bordercolor=hex_to_rgba(color, 0.06),  # Border barely visible
-            borderwidth=1  # Very thin border
+            borderwidth=1.5  # Thin border
         )
+        
+        # Configure border radius for pill shape
+        fig.update_annotations(borderradius=24)
         
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
@@ -130,28 +133,20 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values - CONTINUIDAD VISUAL con emojis y badges circulares
+        # Historical Values - Ultra compacto para one-pager
         st.markdown("""
-        <div style="max-width: 1000px; margin: 1.5rem auto 0 auto;">
-            <p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase; font-weight: 500;">Historical Values</p>
+        <div style="max-width: 900px; margin: 1rem auto 0 auto;">
+            <p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600; text-align: left;">Historical Values</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Color map y emoji map - MISMOS colores que el resto del dashboard
+        # Color map
         color_map = {
             'Extreme Risk Off': '#ef4444',
             'Risk Off': '#f97316', 
             'Neutral': '#eab308',
             'Risk On': '#10b981',
             'Extreme Risk On': '#22c55e'
-        }
-        
-        emoji_map = {
-            'Extreme Risk Off': '🔴',
-            'Risk Off': '🟠',
-            'Neutral': '🟡',
-            'Risk On': '🟢',
-            'Extreme Risk On': '🟢'
         }
         
         # Historical items
@@ -162,37 +157,35 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             ("Last month", historical.get('last_month'))
         ]
         
-        # Wrapper con max-width (no ensancharse en desktop)
-        st.markdown('<div style="max-width: 1000px; margin: 0 auto;">', unsafe_allow_html=True)
+        # Container con max-width fijo
+        st.markdown('<div style="max-width: 900px; margin: 0 auto;">', unsafe_allow_html=True)
         
         for label, data in historical_items:
             if data and data.get('score') is not None:
                 score = data['score']
                 status = data['status']
                 status_color = color_map.get(status, '#f97316')
-                emoji = emoji_map.get(status, '🟠')
                 
                 st.markdown(f"""
-                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
-                    <span style="font-size: 1.25rem;">{emoji}</span>
-                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
-                    <div style="background: {status_color}; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: white; font-size: 1rem; font-weight: 700;">{int(score)}</span>
+                <div style="display: grid; grid-template-columns: 120px auto 50px 130px; gap: 1.5rem; align-items: center; padding: 0.4rem 0.75rem; border-bottom: 1px solid rgba(48, 54, 61, 0.2);">
+                    <span style="color: #c9d1d9; font-size: 0.875rem; font-weight: 500;">{label}</span>
+                    <div></div>
+                    <div style="background: {status_color}; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                        <span style="color: white; font-size: 0.875rem; font-weight: 700;">{int(score)}</span>
                     </div>
-                    <span style="color: {status_color}; font-size: 0.875rem; font-weight: 500; min-width: 110px; text-align: right;">{status}</span>
+                    <span style="color: {status_color}; font-size: 0.8rem; font-weight: 600; text-align: right;">{status}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
-                    <span style="font-size: 1.25rem;">⚪</span>
-                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
-                    <div style="background: rgba(139, 148, 158, 0.3); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #8b949e; font-size: 1rem; font-weight: 700;">—</span>
+                <div style="display: grid; grid-template-columns: 120px auto 50px 130px; gap: 1.5rem; align-items: center; padding: 0.4rem 0.75rem; border-bottom: 1px solid rgba(48, 54, 61, 0.2);">
+                    <span style="color: #c9d1d9; font-size: 0.875rem; font-weight: 500;">{label}</span>
+                    <div></div>
+                    <div style="background: rgba(139, 148, 158, 0.15); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #8b949e; font-size: 0.875rem; font-weight: 700;">—</span>
                     </div>
-                    <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 110px; text-align: right;">Collecting</span>
+                    <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; text-align: right;">Collecting</span>
                 </div>
                 """, unsafe_allow_html=True)
         
-        # Cerrar wrapper
         st.markdown('</div>', unsafe_allow_html=True)
