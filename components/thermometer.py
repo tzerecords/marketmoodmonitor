@@ -72,21 +72,21 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             }
         ))
         
-        # Add professional score badge annotation with pill extremo
+        # Add professional score badge annotation with VERY subtle pill-like background
         fig.add_annotation(
             text=f'<b>{score:.1f}</b>',
             x=0.5, 
-            y=0.3,
+            y=0.35,  # Centered in gauge
             showarrow=False,
             font=dict(
-                size=32,  # Más chico que el de la derecha (40px)
-                color=hex_to_rgba(color, 0.6),  # Opacity 60% en texto
-                family='system-ui, -apple-system, "Segoe UI", sans-serif'
+                size=28,  # Smaller - más discreto
+                color=hex_to_rgba(color, 0.5),  # 50% opacity on text
+                family='system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
             ),
-            bgcolor=hex_to_rgba(color, 0.03),  # Opacity MUY BAJA (3%)
-            borderpad=14,  # Más padding para pill shape
-            bordercolor=hex_to_rgba(color, 0.06),  # Border casi invisible
-            borderwidth=1.5
+            bgcolor=hex_to_rgba(color, 0.04),  # Ultra subtle background
+            borderpad=8,  # Compact padding
+            bordercolor=hex_to_rgba(color, 0.06),  # Border barely visible
+            borderwidth=1  # Very thin border
         )
         
         fig.update_layout(
@@ -101,50 +101,57 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - Tooltip y spacing mejorados
+        # Status section - Centered and organized layout
         status_html = f"""
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem;">{emoji}</span>
-                <div style="background: {color}26; border: 2px solid {color}40; padding: 0.5rem 1.75rem; border-radius: 10px;">
-                    <span style="color: {color}; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
-                        {status}
-                    </span>
-                </div>
-            </div>
-            
-            <div style="margin-top: 1rem;">
-                <span style="font-size: 2.75rem; font-weight: 600; color: {color};">{score}</span>
-                <span style="display: inline-block; margin-left: 0.5rem; font-size: 0.875rem; color: #8b949e; cursor: help; vertical-align: super;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Market Breadth 20%">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                    </svg>
+        <style>
+            @keyframes fadeIn {{
+                from {{ opacity: 0; }}
+                to {{ opacity: 1; }}
+            }}
+        </style>
+        <div style="text-align: center; max-width: 600px; margin: 2rem auto; padding: 1.5rem; background: rgba(30, 35, 45, 0.3); border-radius: 12px; animation: fadeIn 0.5s ease-out;">
+            <!-- Primera línea: emoji + status pill inline -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem; margin-right: 0.75rem;">{emoji}</span>
+                <span style="background: {color}26; color: {color}; padding: 0.5rem 1.5rem; border-radius: 8px; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
+                    {status}
                 </span>
             </div>
-            
-            <p style="color: #8b949e; font-size: 1rem; margin-top: 0.75rem; line-height: 1.5;">
+            <!-- Segunda línea: score centrado con tooltip -->
+            <div style="font-size: 2.5rem; font-weight: 600; color: {color}; margin-bottom: 0.75rem;">
+                {score} <span style="font-size: 1rem; color: #8b949e; cursor: help; margin-left: 0.5rem;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
+            </div>
+            <!-- Tercera línea: mensaje descriptivo -->
+            <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
                 {message}
-            </p>
+            </div>
         </div>
         """
         
         st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values - Profesional, grid fijo, sin emojis laterales
+        # Historical Values - CONTINUIDAD VISUAL con emojis y badges circulares
         st.markdown("""
-        <div style="max-width: 900px; margin: 2rem auto 0 auto;">
-            <p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 1.25rem; text-transform: uppercase; font-weight: 600; text-align: left;">Historical Values</p>
+        <div style="max-width: 1000px; margin: 1.5rem auto 0 auto;">
+            <p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase; font-weight: 500;">Historical Values</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Color map
+        # Color map y emoji map - MISMOS colores que el resto del dashboard
         color_map = {
             'Extreme Risk Off': '#ef4444',
             'Risk Off': '#f97316', 
             'Neutral': '#eab308',
             'Risk On': '#10b981',
             'Extreme Risk On': '#22c55e'
+        }
+        
+        emoji_map = {
+            'Extreme Risk Off': '🔴',
+            'Risk Off': '🟠',
+            'Neutral': '🟡',
+            'Risk On': '🟢',
+            'Extreme Risk On': '🟢'
         }
         
         # Historical items
@@ -155,35 +162,37 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             ("Last month", historical.get('last_month'))
         ]
         
-        # Container con max-width fijo
-        st.markdown('<div style="max-width: 900px; margin: 0 auto;">', unsafe_allow_html=True)
+        # Wrapper con max-width (no ensancharse en desktop)
+        st.markdown('<div style="max-width: 1000px; margin: 0 auto;">', unsafe_allow_html=True)
         
         for label, data in historical_items:
             if data and data.get('score') is not None:
                 score = data['score']
                 status = data['status']
                 status_color = color_map.get(status, '#f97316')
+                emoji = emoji_map.get(status, '🟠')
                 
                 st.markdown(f"""
-                <div style="display: grid; grid-template-columns: 120px 1fr 60px 140px; gap: 2rem; align-items: center; padding: 0.875rem 1rem; border-bottom: 1px solid rgba(48, 54, 61, 0.25); transition: background 0.2s;">
-                    <span style="color: #c9d1d9; font-size: 0.875rem; font-weight: 500;">{label}</span>
-                    <div style="flex: 1;"></div>
-                    <div style="background: {status_color}; border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                        <span style="color: white; font-size: 1.125rem; font-weight: 700;">{int(score)}</span>
+                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
+                    <span style="font-size: 1.25rem;">{emoji}</span>
+                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
+                    <div style="background: {status_color}; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-size: 1rem; font-weight: 700;">{int(score)}</span>
                     </div>
-                    <span style="color: {status_color}; font-size: 0.875rem; font-weight: 600; text-align: right;">{status}</span>
+                    <span style="color: {status_color}; font-size: 0.875rem; font-weight: 500; min-width: 110px; text-align: right;">{status}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div style="display: grid; grid-template-columns: 120px 1fr 60px 140px; gap: 2rem; align-items: center; padding: 0.875rem 1rem; border-bottom: 1px solid rgba(48, 54, 61, 0.25);">
-                    <span style="color: #c9d1d9; font-size: 0.875rem; font-weight: 500;">{label}</span>
-                    <div style="flex: 1;"></div>
-                    <div style="background: rgba(139, 148, 158, 0.2); border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #8b949e; font-size: 1.125rem; font-weight: 700;">—</span>
+                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
+                    <span style="font-size: 1.25rem;">⚪</span>
+                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
+                    <div style="background: rgba(139, 148, 158, 0.3); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #8b949e; font-size: 1rem; font-weight: 700;">—</span>
                     </div>
-                    <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; text-align: right;">Collecting</span>
+                    <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 110px; text-align: right;">Collecting</span>
                 </div>
                 """, unsafe_allow_html=True)
         
+        # Cerrar wrapper
         st.markdown('</div>', unsafe_allow_html=True)
