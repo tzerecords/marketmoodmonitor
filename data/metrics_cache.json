@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T09:43:16.230551",
+  "timestamp": "2025-11-11T09:50:37.089061",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -15,23 +15,23 @@
     ]
   },
   "global_market": {
-    "total_market_cap_usd": 3638566549556.927,
-    "total_volume_24h_usd": 197221160553.51846,
-    "btc_dominance": 57.73787869187606,
-    "eth_dominance": 11.868676178593383,
+    "total_market_cap_usd": 3632422063115.7603,
+    "total_volume_24h_usd": 197185754702.421,
+    "btc_dominance": 57.719222515599014,
+    "eth_dominance": 11.873340589058929,
     "active_cryptocurrencies": 19411
   },
   "bitcoin": {
-    "price_usd": 105361,
-    "volume_24h_usd": 70173060405.57574,
-    "price_change_24h": -1.0167469847941664
+    "price_usd": 104991,
+    "volume_24h_usd": 68992677624.48785,
+    "price_change_24h": -1.4088746000160124
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": 21.12832
+        "price_change_24h": 19.32827
       },
       {
         "symbol": "FIGR_HELOC",
@@ -39,38 +39,38 @@
         "price_change_24h": 1.77701
       },
       {
-        "symbol": "XAUT",
-        "name": "Tether Gold",
-        "price_change_24h": 1.48554
-      },
-      {
         "symbol": "PAXG",
         "name": "PAX Gold",
-        "price_change_24h": 1.46137
+        "price_change_24h": 1.49821
+      },
+      {
+        "symbol": "XAUT",
+        "name": "Tether Gold",
+        "price_change_24h": 1.45796
       }
     ],
     "losers": [
       {
         "symbol": "NEAR",
         "name": "NEAR Protocol",
-        "price_change_24h": -10.23908
+        "price_change_24h": -11.00119
       },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -12.60253
+        "price_change_24h": -12.41163
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -25.75818
+        "price_change_24h": -26.8415
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -30.89624
+        "price_change_24h": -30.57695
       }
     ]
   },
-  "market_breadth": 28.999999999999996
+  "market_breadth": 19.0
 }

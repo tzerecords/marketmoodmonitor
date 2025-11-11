@@ -105,7 +105,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
-                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Percentage of top 50 coins outperforming BTC in 24h">
+                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Percentage of top movers outperforming BTC in 24h. Alternative metric to traditional altcoin season index.">
                     ALTCOIN SEASON ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
