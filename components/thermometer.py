@@ -153,7 +153,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         ]
         
         # Single container with header and rows
-        st.markdown('<div style="max-width: 700px; margin: 1.5rem auto 0 auto; padding: 1rem; background: rgba(30, 35, 45, 0.2); border-radius: 12px;">', unsafe_allow_html=True)
+        st.markdown('<div style="max-width: 550px; margin: 1.5rem auto 0 auto; padding: 1rem; background: rgba(30, 35, 45, 0.2); border-radius: 12px;">', unsafe_allow_html=True)
         
         # Header
         st.markdown('<p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase; font-weight: 600; text-align: left;">Historical Values</p>', unsafe_allow_html=True)
@@ -170,10 +170,10 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
                     <span style="color: #c9d1d9; font-size: 0.9rem; font-weight: 500;">{label}</span>
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="background: {status_color}; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); flex-shrink: 0;">
-                            <span style="color: white; font-size: 1.1rem; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">{int(score)}</span>
+                        <div style="background: {status_color}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); flex-shrink: 0;">
+                            <span style="color: white; font-size: 1.15rem; font-weight: 900; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">{int(score)}</span>
                         </div>
-                        <span style="color: {status_color}; font-size: 0.85rem; font-weight: 600; min-width: 140px; text-align: left;">{status}</span>
+                        <span style="color: {status_color}; font-size: 0.85rem; font-weight: 600; min-width: 100px; text-align: left;">{status}</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -182,10 +182,10 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
                     <span style="color: #c9d1d9; font-size: 0.9rem; font-weight: 500;">{label}</span>
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="background: rgba(139, 148, 158, 0.2); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <span style="color: #8b949e; font-size: 1.1rem; font-weight: 700;">—</span>
+                        <div style="background: rgba(139, 148, 158, 0.2); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span style="color: #8b949e; font-size: 1.15rem; font-weight: 700;">—</span>
                         </div>
-                        <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 140px; text-align: left;">Collecting data</span>
+                        <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 100px; text-align: left;">Collecting data</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
