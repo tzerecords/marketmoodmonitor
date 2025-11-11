@@ -101,28 +101,30 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - CONSISTENTE con Historical Values (badge circular + status pill)
+        # Status section - Centered and organized layout
         status_html = f"""
-        <div style="text-align: center; max-width: 600px; margin: 1rem auto;">
-            <!-- Badge circular grande con score -->
-            <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-                <div style="background: {color}; border-radius: 50%; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                    <span style="color: white; font-size: 1.75rem; font-weight: 700;">{score:.1f}</span>
-                </div>
+        <style>
+            @keyframes fadeIn {{
+                from {{ opacity: 0; }}
+                to {{ opacity: 1; }}
+            }}
+        </style>
+        <div style="text-align: center; max-width: 600px; margin: 2rem auto; padding: 1.5rem; background: rgba(30, 35, 45, 0.3); border-radius: 12px; animation: fadeIn 0.5s ease-out;">
+            <!-- Primera línea: emoji + status pill inline -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem; margin-right: 0.75rem;">{emoji}</span>
+                <span style="background: {color}26; color: {color}; padding: 0.5rem 1.5rem; border-radius: 8px; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
+                    {status}
+                </span>
             </div>
-            
-            <!-- Status pill + emoji después -->
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                <div style="background: {color}26; border: 2px solid {color}40; padding: 0.5rem 1.25rem; border-radius: 8px;">
-                    <span style="color: {color}; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">{status}</span>
-                </div>
-                <span style="font-size: 1.5rem;">{emoji}</span>
+            <!-- Segunda línea: score centrado con tooltip -->
+            <div style="font-size: 2.5rem; font-weight: 600; color: {color}; margin-bottom: 0.75rem;">
+                {score} <span style="font-size: 1rem; color: #8b949e; cursor: help; margin-left: 0.5rem;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
             </div>
-            
-            <!-- Mensaje descriptivo + tooltip -->
-            <p style="color: #8b949e; font-size: 0.9rem; margin: 0; line-height: 1.4;">
-                {message} <span style="font-size: 0.875rem; color: #8b949e; cursor: help; margin-left: 0.25rem;" title="Composite score: Fear &amp; Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%">ⓘ</span>
-            </p>
+            <!-- Tercera línea: mensaje descriptivo -->
+            <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
+                {message}
+            </div>
         </div>
         """
         
