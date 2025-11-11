@@ -125,6 +125,12 @@
       "score": 46.9,
       "status": "Neutral",
       "message": "Wait for confirmation - No clear directional bias"
+    },
+    {
+      "timestamp": "2025-11-11T08:25:23.741466",
+      "score": 37.1,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
     }
   ]
 }
