@@ -17,28 +17,48 @@
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-/* Hide Material Icons fallback text */
-.material-icons-sharp,
-.material-icons,
-span[data-baseweb="icon"],
-svg[data-baseweb="icon"] {
-    font-size: 0 !important;
-}
+/* Hide Material Icons fallback text and replace with CSS icons */
 
-/* Hide specific icon text fallbacks */
-.streamlit-expanderHeader::before,
-.streamlit-expanderHeader::after {
-    content: '' !important;
-}
-
-/* Remove any text nodes that say "keyboard_arrow_*" */
-*:not(code):not(pre) {
-    text-rendering: optimizeLegibility;
-}
-
-button[kind="header"]::after,
-button[kind="header"]::before {
+/* Step 1: Hide original icon containers to suppress "keyboard_arrow_*" fallback text */
+/* Target the specific data-testid that Streamlit uses */
+[data-testid="stIconMaterial"],
+.streamlit-expanderHeader svg,
+.streamlit-expanderHeader span.material-icons,
+.streamlit-expanderHeader span.material-icons-sharp,
+[data-testid="stExpander"] svg,
+[data-testid="stExpander"] .material-icons {
     display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Step 2: Inject custom arrow icon via pseudo-element */
+.streamlit-expanderHeader button::before {
+    content: '▸';
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    transition: transform 0.2s ease;
+    color: #8b949e;
+}
+
+/* Step 3: Rotate arrow when expanded */
+.streamlit-expanderHeader button[aria-expanded="true"]::before {
+    transform: rotate(90deg);
+}
+
+/* Alternative: Use different glyphs for expanded/collapsed states */
+.streamlit-expanderHeader button[aria-expanded="false"]::before {
+    content: '▸';
+}
+
+.streamlit-expanderHeader button[aria-expanded="true"]::before {
+    content: '▾';
+    transform: none;
 }
 
 /* Typography - System Font Stack */

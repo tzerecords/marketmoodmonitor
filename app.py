@@ -152,32 +152,53 @@ def main():
             render_hot_tokens(market_data["top_movers"])
         st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
         
-        # 4. About modal/expander - margin-top: 2.5rem
+        # 4. About section - margin-top: 2.5rem (Custom HTML to avoid Material Icons)
         st.markdown('<div style="margin-top: 2.5rem; border-top: 1px solid #30363d; padding-top: 2rem;"></div>', unsafe_allow_html=True)
         
-        with st.expander("About", expanded=False):
-            st.markdown(
-                """
-                **Technical Stack**
-                
-                - **Backend:** Python 3.11 with Streamlit 1.28 framework
-                - **Caching layer:** `st.cache_data` decorators with 10min TTL
-                - **APIs:** CoinGecko for market data, Alternative.me for sentiment
-                - **Rate limiting:** 50 req/min with exponential backoff
-                - **Persistence:** JSON append-only logs with 90-day retention
-                - **SQL:** Query layer prepared for future PostgreSQL/Snowflake integration
-                
-                **Methodology**
-                
-                - **Fear & Greed Index:** 35% weight
-                - **BTC Momentum:** 25% weight
-                - **Volume Health:** 20% weight
-                - **Market Breadth:** 20% weight
-                - **Normalization:** Z-score transformation to 0-100 scale
-                - **Fallbacks:** Implemented for degraded API sources
-                """,
-                unsafe_allow_html=False
-            )
+        st.markdown(
+            """
+            <details style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 0; margin-bottom: 1rem;">
+                <summary style="padding: 0.75rem 1rem; color: #8b949e; font-weight: 500; font-size: 0.8125rem; cursor: pointer; user-select: none; list-style: none;">
+                    <span style="margin-right: 0.5rem;">▸</span> About
+                </summary>
+                <div style="padding: 1rem; border-top: 1px solid #30363d;">
+                    <p style="margin: 0 0 1rem 0;"><strong>Technical Stack</strong></p>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: #8b949e;">
+                        <li><strong>Backend:</strong> Python 3.11 with Streamlit 1.28 framework</li>
+                        <li><strong>Caching layer:</strong> <code>st.cache_data</code> decorators with 10min TTL</li>
+                        <li><strong>APIs:</strong> CoinGecko for market data, Alternative.me for sentiment</li>
+                        <li><strong>Rate limiting:</strong> 50 req/min with exponential backoff</li>
+                        <li><strong>Persistence:</strong> JSON append-only logs with 90-day retention</li>
+                        <li><strong>SQL:</strong> Query layer prepared for future PostgreSQL/Snowflake integration</li>
+                    </ul>
+                    <p style="margin: 1rem 0;"><strong>Methodology</strong></p>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: #8b949e;">
+                        <li><strong>Fear & Greed Index:</strong> 35% weight</li>
+                        <li><strong>BTC Momentum:</strong> 25% weight</li>
+                        <li><strong>Volume Health:</strong> 20% weight</li>
+                        <li><strong>Market Breadth:</strong> 20% weight</li>
+                        <li><strong>Normalization:</strong> Z-score transformation to 0-100 scale</li>
+                        <li><strong>Fallbacks:</strong> Implemented for degraded API sources</li>
+                    </ul>
+                </div>
+            </details>
+            
+            <style>
+            details > summary {
+                list-style: none;
+            }
+            details > summary::-webkit-details-marker {
+                display: none;
+            }
+            details[open] > summary span {
+                display: inline-block;
+                transform: rotate(90deg);
+                transition: transform 0.2s ease;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
         
         # Footer
         st.markdown(
@@ -201,9 +222,20 @@ def main():
         st.error('⚠️ An error occurred while loading the dashboard.')
         st.info('Please refresh the page. If the problem persists, check your internet connection or try again later.')
         
-        with st.expander('Technical Details', expanded=False):
-            st.code(str(e))
-            st.caption('If this error continues, please report it with the details above.')
+        st.markdown(
+            f"""
+            <details style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 0; margin-top: 1rem;">
+                <summary style="padding: 0.75rem 1rem; color: #8b949e; font-weight: 500; font-size: 0.8125rem; cursor: pointer; user-select: none; list-style: none;">
+                    <span style="margin-right: 0.5rem;">▸</span> Technical Details
+                </summary>
+                <div style="padding: 1rem; border-top: 1px solid #30363d;">
+                    <pre style="background: #0d1117; padding: 1rem; border-radius: 4px; overflow-x: auto; color: #f97316; font-family: monospace; font-size: 0.875rem; margin: 0;">{str(e)}</pre>
+                    <p style="color: #6e7681; font-size: 0.75rem; margin: 0.5rem 0 0 0;">If this error continues, please report it with the details above.</p>
+                </div>
+            </details>
+            """,
+            unsafe_allow_html=True
+        )
 
 if __name__ == "__main__":
     main()
