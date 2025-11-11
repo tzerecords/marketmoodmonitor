@@ -29,12 +29,31 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     # Create asymmetric layout
     col_gauge, col_status = st.columns([0.4, 0.6], gap="large")
     
-    # LEFT: Gauge with pointer/needle
+    # LEFT: Gauge with pointer/needle + score inside
     with col_gauge:
-        # Gauge with gray pointer/needle (Fear & Greed style)
+        # Extract RGB from hex color for opacity
+        color_rgb_map = {
+            '#ef4444': '239, 68, 68',      # Extreme Risk Off
+            '#f97316': '249, 115, 22',     # Risk Off
+            '#eab308': '234, 179, 8',      # Neutral
+            '#10b981': '16, 185, 129',     # Risk On
+            '#22c55e': '34, 197, 94',      # Extreme Risk On
+        }
+        rgba_color = f"rgba({color_rgb_map.get(color, '128, 128, 128')}, 0.5)"
+        
+        # Gauge with gray pointer/needle (Fear & Greed style) + score inside
         fig = go.Figure(go.Indicator(
-            mode="gauge",
+            mode="gauge+number",  # Show both gauge and number
             value=score,
+            number={
+                'font': {
+                    'size': 48,  # Medium size for subtlety
+                    'color': rgba_color,  # 50% opacity for subtleness
+                    'family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                },
+                'suffix': '',
+                'valueformat': '.1f'
+            },
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={
                 'axis': {
@@ -74,32 +93,6 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         )
         
         st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
-        
-        # Score badge below gauge with subtle pulse animation
-        st.markdown(
-            f"""
-            <style>
-                @keyframes scorePulse {{
-                    0%, 100% {{
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                        transform: scale(1);
-                    }}
-                    50% {{
-                        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-                        transform: scale(1.02);
-                    }}
-                }}
-            </style>
-            <div style="text-align: center; margin-top: -1rem;">
-                <div style="display: inline-block; background: {color}; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); animation: scorePulse 2s ease-in-out infinite;">
-                    <span style="font-size: 2.5rem; color: #ffffff; font-weight: 700; line-height: 1;">
-                        {score}
-                    </span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
     
     # RIGHT: Status + Historical Values
     with col_status:
@@ -132,7 +125,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values section - Native Streamlit components
+        # Historical Values section - Single row horizontal layout (Alternative.me style)
         # Color map for dynamic status colors
         color_map = {
             'Extreme Risk Off': '#ef4444',
@@ -145,47 +138,54 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         try:
             st.markdown('<div style="margin-top: 1.5rem;"></div>', unsafe_allow_html=True)
             st.markdown(
-                '<div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">HISTORICAL VALUES</div>',
+                '<p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 0.5rem; text-transform: uppercase; text-align: center;">Historical Values</p>',
                 unsafe_allow_html=True
             )
             
-            col1, col2 = st.columns(2)
+            # Single horizontal row with 4 columns
+            col1, col2, col3, col4 = st.columns(4, gap="small")
             
+            # Now
             with col1:
                 if historical.get('now'):
                     now_data = historical['now']
                     st.metric(label="Now", value=f"{now_data['score']}")
                     status_color = color_map.get(now_data['status'], '#8b949e')
                     st.markdown(
-                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{now_data["status"]}</span>',
-                        unsafe_allow_html=True
-                    )
-                
-                if historical.get('last_week'):
-                    week_data = historical['last_week']
-                    st.metric(label="Last week", value=f"{week_data['score']}")
-                    status_color = color_map.get(week_data['status'], '#8b949e')
-                    st.markdown(
-                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{week_data["status"]}</span>',
+                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{now_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
             
+            # Yesterday
             with col2:
                 if historical.get('yesterday'):
                     yesterday_data = historical['yesterday']
                     st.metric(label="Yesterday", value=f"{yesterday_data['score']}")
                     status_color = color_map.get(yesterday_data['status'], '#8b949e')
                     st.markdown(
-                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{yesterday_data["status"]}</span>',
+                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{yesterday_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
-                
+            
+            # Last week
+            with col3:
+                if historical.get('last_week'):
+                    week_data = historical['last_week']
+                    st.metric(label="Last week", value=f"{week_data['score']}")
+                    status_color = color_map.get(week_data['status'], '#8b949e')
+                    st.markdown(
+                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{week_data["status"]}</p>',
+                        unsafe_allow_html=True
+                    )
+            
+            # Last month
+            with col4:
                 if historical.get('last_month'):
                     month_data = historical['last_month']
                     st.metric(label="Last month", value=f"{month_data['score']}")
                     status_color = color_map.get(month_data['status'], '#8b949e')
                     st.markdown(
-                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{month_data["status"]}</span>',
+                        f'<p style="color: {status_color}; font-size: 0.875rem; margin-top: -0.5rem; text-align: center; font-weight: 600;">{month_data["status"]}</p>',
                         unsafe_allow_html=True
                     )
                 

@@ -7,6 +7,8 @@ import requests
 from datetime import datetime
 import logging
 import time
+import json
+from pathlib import Path
 
 from utils.config import (
     COINGECKO_ENDPOINTS,
@@ -17,6 +19,9 @@ from utils.config import (
 )
 
 logger = logging.getLogger(__name__)
+
+# Persistent cache file
+METRICS_CACHE_FILE = Path("data/metrics_cache.json")
 
 
 class MarketDataFetcher:
@@ -211,12 +216,52 @@ class MarketDataFetcher:
         
         return breadth_percentage
     
+    def _save_metrics_cache(self, data: Dict[str, Any]) -> None:
+        """Save metrics to persistent JSON cache."""
+        try:
+            # Convert datetime to string for JSON serialization
+            cache_data = {
+                "timestamp": data.get("timestamp").isoformat() if data.get("timestamp") else datetime.now().isoformat(),
+                "fear_greed": data.get("fear_greed"),
+                "global_market": data.get("global_market"),
+                "bitcoin": data.get("bitcoin"),
+                "top_movers": data.get("top_movers"),
+                "market_breadth": data.get("market_breadth"),
+            }
+            
+            # Only save if all critical data is present
+            if all([cache_data["fear_greed"], cache_data["global_market"], cache_data["bitcoin"]]):
+                METRICS_CACHE_FILE.parent.mkdir(exist_ok=True)
+                with open(METRICS_CACHE_FILE, 'w') as f:
+                    json.dump(cache_data, f, indent=2)
+                logger.info("Saved metrics to persistent cache")
+        except Exception as e:
+            logger.error(f"Failed to save metrics cache: {e}")
+    
+    def _load_metrics_cache(self) -> Optional[Dict[str, Any]]:
+        """Load metrics from persistent JSON cache."""
+        try:
+            if METRICS_CACHE_FILE.exists():
+                with open(METRICS_CACHE_FILE, 'r') as f:
+                    cache_data = json.load(f)
+                
+                # Convert timestamp string back to datetime
+                if cache_data.get("timestamp"):
+                    cache_data["timestamp"] = datetime.fromisoformat(cache_data["timestamp"])
+                
+                logger.info("Loaded metrics from persistent cache")
+                return cache_data
+        except Exception as e:
+            logger.error(f"Failed to load metrics cache: {e}")
+        
+        return None
+    
     def fetch_all_data(self) -> Dict[str, Any]:
         """
-        Fetch all market data from APIs.
+        Fetch all market data from APIs with persistent cache fallback.
         
         Returns:
-            Dict containing all market data or cached fallback
+            Dict containing all market data or cached fallback with 'using_cache' flag
         """
         logger.info("Starting full market data fetch...")
         
@@ -227,15 +272,46 @@ class MarketDataFetcher:
             "top_movers": self.get_top_movers(),
             "market_breadth": self.get_market_breadth(),
             "timestamp": datetime.now(),
+            "using_cache": False,  # Flag to indicate if using cached data
         }
         
-        if all([results["fear_greed"], results["global_market"], results["bitcoin"], results["market_breadth"]]):
-            self.cache = results
+        # Check if all critical data was fetched successfully
+        api_success = all([
+            results["fear_greed"], 
+            results["global_market"], 
+            results["bitcoin"], 
+            results["market_breadth"]
+        ])
+        
+        if api_success:
+            # Successful fetch - save to caches
+            self.cache = results.copy()
             self.last_fetch_time = datetime.now()
+            self._save_metrics_cache(results)
             logger.info("Successfully fetched all market data")
         else:
+            # API failed - try memory cache first, then persistent cache
             logger.warning("Some API calls failed, using cached data if available")
-            if self.cache:
-                results = self.cache
+            
+            if self.cache and self.cache.get("fear_greed"):
+                # Use in-memory cache with CURRENT timestamp
+                results = self.cache.copy()
+                results["timestamp"] = datetime.now()  # Fresh timestamp for UI refresh indicators
+                results["using_cache"] = True
+                logger.info("Using in-memory cache")
+            else:
+                # Try persistent cache
+                persistent_cache = self._load_metrics_cache()
+                if persistent_cache:
+                    results = persistent_cache
+                    results["timestamp"] = datetime.now()  # Rehydrate with current timestamp
+                    results["using_cache"] = True
+                    self.cache = persistent_cache.copy()  # Update memory cache
+                    logger.info("Using persistent cache from disk")
+                else:
+                    # No cache available - use partial data with flag
+                    results["timestamp"] = datetime.now()  # Even partial data needs timestamp
+                    results["using_cache"] = True
+                    logger.warning("No cache available - returning partial data")
         
         return results

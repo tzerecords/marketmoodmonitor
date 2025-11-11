@@ -109,7 +109,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
                     ALTCOIN SEASON ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
-                    {altcoin_season:.0f}%
+                    {altcoin_season:.1f}%
                 </div>
             </div>
             """,

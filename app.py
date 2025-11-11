@@ -61,12 +61,13 @@ def fetch_and_calculate_data():
     return market_data, risk_score_data
 
 
-def render_header_controls(last_update_time):
+def render_header_controls(last_update_time, using_cache=False):
     """
-    Render refresh controls with dual timestamps.
+    Render refresh controls with dual timestamps and cache indicator.
     
     Args:
         last_update_time: Timestamp of last data fetch
+        using_cache: Whether current data is from cache (rate limited)
     """
     # Calculate time ago
     time_ago = ""
@@ -83,6 +84,11 @@ def render_header_controls(last_update_time):
     # Calculate next update
     time_remaining = get_time_until_next_refresh(last_update_time, REFRESH_INTERVAL_SECONDS) if last_update_time else "—"
     
+    # Cache indicator badge
+    cache_badge = ""
+    if using_cache:
+        cache_badge = '<span style="margin-left: 1rem; background: rgba(234, 179, 8, 0.15); color: #eab308; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem;">⚠ Using cached data</span>'
+    
     col1, col2 = st.columns([0.8, 0.2])
     
     with col1:
@@ -96,6 +102,7 @@ def render_header_controls(last_update_time):
                 <span style="color: #8b949e; font-size: 0.8125rem;">
                     Next update in: <span style="color: #c9d1d9; font-weight: 500;">{time_remaining}</span>
                 </span>
+                {cache_badge}
             </div>
             """,
             unsafe_allow_html=True
@@ -135,8 +142,8 @@ def main():
         # Update previous score
         st.session_state.previous_score = current_score
         
-        # Header controls
-        render_header_controls(st.session_state.last_fetch_time)
+        # Header controls with cache indicator
+        render_header_controls(st.session_state.last_fetch_time, market_data.get("using_cache", False))
         
         # Layout structure with ultra-tight spacing
         # 1. Hero section (thermometer asymmetric) - margin-bottom: 0.75rem
