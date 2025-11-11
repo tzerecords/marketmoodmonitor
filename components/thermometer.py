@@ -130,51 +130,69 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
         
         st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values section - VERTICAL list (Alternative.me style)
-        # Color map for dynamic status colors
+        # Historical Values - CONTINUIDAD VISUAL con emojis y badges circulares
+        st.markdown("""
+        <div style="max-width: 1000px; margin: 1.5rem auto 0 auto;">
+            <p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase; font-weight: 500;">Historical Values</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Color map y emoji map - MISMOS colores que el resto del dashboard
         color_map = {
             'Extreme Risk Off': '#ef4444',
-            'Risk Off': '#f97316',
+            'Risk Off': '#f97316', 
             'Neutral': '#eab308',
             'Risk On': '#10b981',
             'Extreme Risk On': '#22c55e'
         }
         
-        try:
-            st.markdown('<div style="margin-top: 1.5rem;"></div>', unsafe_allow_html=True)
-            st.markdown(
-                '<p style="font-size: 0.75rem; color: #8b949e; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Historical Values</p>',
-                unsafe_allow_html=True
-            )
-            
-            # Helper function to render each vertical row
-            def render_history_row(label: str, data: Optional[Dict]) -> None:
-                if data and data.get('score') is not None:
-                    score = data['score']
-                    status = data['status']
-                    status_color = color_map.get(status, '#8b949e')
-                    
-                    st.markdown(f'''
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(33, 38, 45, 0.5);">
-                        <span style="color: #8b949e; font-size: 0.875rem; min-width: 80px;">{label}</span>
-                        <span style="font-size: 1.25rem; font-weight: 700; flex: 1; text-align: center;">{score:.1f}</span>
-                        <span style="color: {status_color}; font-size: 0.875rem; min-width: 100px; text-align: right;">{status}</span>
-                    </div>
-                    ''', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'''
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(33, 38, 45, 0.5);">
-                        <span style="color: #8b949e; font-size: 0.875rem; min-width: 80px;">{label}</span>
-                        <span style="font-size: 1.25rem; font-weight: 700; color: #8b949e; flex: 1; text-align: center;">—</span>
-                        <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 100px; text-align: right;">Collecting data</span>
-                    </div>
-                    ''', unsafe_allow_html=True)
-            
-            # Render 4 vertical rows
-            render_history_row("Now", historical.get('now'))
-            render_history_row("Yesterday", historical.get('yesterday'))
-            render_history_row("Last week", historical.get('last_week'))
-            render_history_row("Last month", historical.get('last_month'))
+        emoji_map = {
+            'Extreme Risk Off': '🔴',
+            'Risk Off': '🟠',
+            'Neutral': '🟡',
+            'Risk On': '🟢',
+            'Extreme Risk On': '🟢'
+        }
+        
+        # Historical items
+        historical_items = [
+            ("Now", historical.get('now')),
+            ("Yesterday", historical.get('yesterday')),
+            ("Last week", historical.get('last_week')),
+            ("Last month", historical.get('last_month'))
+        ]
+        
+        # Wrapper con max-width (no ensancharse en desktop)
+        st.markdown('<div style="max-width: 1000px; margin: 0 auto;">', unsafe_allow_html=True)
+        
+        for label, data in historical_items:
+            if data and data.get('score') is not None:
+                score = data['score']
+                status = data['status']
+                status_color = color_map.get(status, '#f97316')
+                emoji = emoji_map.get(status, '🟠')
                 
-        except Exception as e:
-            st.info('📊 Aggregating historical market data, please wait...')
+                st.markdown(f"""
+                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
+                    <span style="font-size: 1.25rem;">{emoji}</span>
+                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
+                    <div style="background: {status_color}; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-size: 1rem; font-weight: 700;">{int(score)}</span>
+                    </div>
+                    <span style="color: {status_color}; font-size: 0.875rem; font-weight: 500; min-width: 110px; text-align: right;">{status}</span>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid rgba(48, 54, 61, 0.3);">
+                    <span style="font-size: 1.25rem;">⚪</span>
+                    <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
+                    <div style="background: rgba(139, 148, 158, 0.3); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #8b949e; font-size: 1rem; font-weight: 700;">—</span>
+                    </div>
+                    <span style="color: #8b949e; font-size: 0.75rem; font-style: italic; min-width: 110px; text-align: right;">Collecting</span>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Cerrar wrapper
+        st.markdown('</div>', unsafe_allow_html=True)
