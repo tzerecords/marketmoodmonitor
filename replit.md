@@ -87,3 +87,63 @@ Preferred communication style: Simple, everyday language.
 *   **In-Memory Caching:** Streamlit's built-in `@st.cache_data` for API responses (10-min TTL).
 *   **Score History Persistence:** JSON file (`data/score_history.json`) storing risk scores with 90-day retention.
 *   **Metrics Cache Persistence:** JSON file (`data/metrics_cache.json`) for API fallback.
+
+## Recent Changes
+
+### November 11, 2025 (v2.4 - Production-Ready Final Polish)
+
+**Validaciones Críticas Pre-Production:**
+- ✅ **Data Source Verification**: Confirmed ALL metrics come from real API calls or systematic calculations - ZERO synthetic data
+  - BTC Dominance: Real from CoinGecko `/global` endpoint
+  - Total Market Cap: Real from CoinGecko `/global` endpoint
+  - 24H Volume: Real from CoinGecko `/global` endpoint
+  - Historical Values: Real from `score_history.json` with timestamps
+  - Altcoin Season: Real calculation using top movers vs BTC performance
+
+**Transparency Fixes:**
+- ✅ **Altcoin Season Tooltip Correction**: Updated tooltip from misleading "top 50 coins" to honest "Percentage of top movers outperforming BTC in 24h. Alternative metric to traditional altcoin season index." - describes the ACTUAL calculation
+
+**Production Polish - 3 Final Improvements:**
+- ✅ **MEJORA 1 - Score Tooltip**: Added ⓘ info icon next to score on right panel with tooltip: "Composite score: Fear & Greed 35%, BTC Momentum 25%, Volume 20%, Breadth 20%" for user education
+- ✅ **MEJORA 2 - Gauge Badge Professional Refinement**:
+  - Converted from `mode="gauge+number"` to `mode="gauge"` with custom annotation
+  - Score badge inside gauge: font-size 36px (smaller than right score 40px for visual hierarchy)
+  - Professional system-ui font family for institutional aesthetic
+  - Subtle background pill with alpha 0.1 + border alpha 0.2 to anchor score visually
+  - Increased gauge axis tick font from 10px to 11px for better readability
+  - Added hex_to_rgba helper function for color conversions
+- ✅ **MEJORA 3 - Historical Values Intelligent Placeholders**:
+  - When no historical data exists (fresh install or deleted JSON), displays "—" with "Collecting data" caption
+  - NEVER invents or hardcodes placeholder values
+  - Maintains transparency: if data doesn't exist, tell user honestly instead of showing fake numbers
+
+**Technical Implementation:**
+- Modified `components/thermometer.py`: Gauge annotation system with professional badge styling, score tooltip, historical placeholders
+- Modified `components/metrics_cards.py`: Corrected Altcoin Season tooltip for transparency
+- All changes architect-reviewed and approved with zero regressions
+
+**Design Philosophy:**
+- **Transparency First**: Every metric honestly describes its source and calculation
+- **Visual Hierarchy**: Gauge badge subtle (36px, 50% opacity) → Right score prominent (40px, full color)
+- **User Education**: Tooltips provide context without overwhelming interface
+- **Honest Placeholders**: Missing data shows "—" + explanation, never fake values
+
+**Production Readiness Validation:**
+- ✅ Persistent cache system functioning correctly (handles CoinGecko 429 rate limits)
+- ✅ All data sources verified as real/systematic
+- ✅ Tooltips accurate and educational
+- ✅ Visual polish matches institutional dashboard standards
+- ✅ Zero synthetic data in entire application
+
+### November 11, 2025 (v2.3 - Production-Ready Polish)
+
+**6 Critical Fixes for V1 Launch:**
+- ✅ **FIX 6 - Altcoin Season Precision**: Changed format from `.0f` to `.1f` in metrics cards
+- ✅ **FIX 10 - Persistent Metrics Cache**: Implemented `data/metrics_cache.json` fallback system
+- ✅ **FIX 9 - API Fallback Indicator**: Added yellow "⚠ Using cached data" badge in header
+- ✅ **FIX 8 - Score Badge in Gauge**: Moved risk score inside Plotly gauge with 50% opacity
+- ✅ **FIX 7 - Historical Values Single Row**: Redesigned from 2x2 grid to horizontal 4-column layout
+- ✅ **FIX 11 - Tight Spacing Global**: Ultra-professional DefiLlama-style spacing
+
+**Critical Bug Fix:**
+- ✅ **Cache Timestamp Regression**: Fixed stale timestamps in persistent cache - now all cache paths inject `datetime.now()`
