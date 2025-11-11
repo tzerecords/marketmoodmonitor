@@ -9,52 +9,6 @@ from datetime import datetime
 from data.score_history import get_historical_values
 
 
-def _validate_html_tags(html: str) -> bool:
-    """Validate HTML tags are balanced."""
-    try:
-        opening = html.count('<div')
-        closing = html.count('</div>')
-        return opening == closing
-    except Exception:
-        return False
-
-
-def _render_history_row(label: str, data: Optional[Dict[str, Any]]) -> str:
-    """Render single history item as vertical row (Fear & Greed style)."""
-    if not data:
-        return f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d;">
-            <span style="color: #8b949e; font-size: 0.875rem;">{label}</span>
-            <span style="color: #6e7681; font-size: 0.875rem;">—</span>
-        </div>
-        """
-    
-    score = data['score']
-    status = data['status']
-    
-    # Color based on status
-    color_map = {
-        'Extreme Risk Off': '#ef4444',
-        'Risk Off': '#f97316',
-        'Neutral': '#eab308',
-        'Risk On': '#10b981',
-        'Extreme Risk On': '#22c55e'
-    }
-    color = color_map.get(status, '#8b949e')
-    
-    return f"""
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #21262d;">
-        <div>
-            <span style="color: #8b949e; font-size: 0.875rem; margin-right: 0.5rem;">{label}</span>
-            <span style="color: {color}; font-size: 0.875rem; font-weight: 600;">{status}</span>
-        </div>
-        <div style="background: {color}; color: #ffffff; font-size: 0.875rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 50px;">
-            {score}
-        </div>
-    </div>
-    """
-
-
 def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetime] = None):
     """
     Render asymmetric Risk Score thermometer.
@@ -119,7 +73,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
             margin=dict(l=10, r=10, t=10, b=10)
         )
         
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
         
         # Score badge below gauge with subtle pulse animation
         st.markdown(
@@ -149,8 +103,7 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
     
     # RIGHT: Status + Historical Values
     with col_status:
-        # Status section - HORIZONTAL COMPACT (Fear & Greed style)
-        # "Now: Fear" layout - emoji inline + status dominant with fade-in animation
+        # Status section - Centered and organized layout
         status_html = f"""
         <style>
             @keyframes fadeIn {{
@@ -158,79 +111,83 @@ def render_thermometer(risk_data: Dict[str, Any], last_updated: Optional[datetim
                 to {{ opacity: 1; }}
             }}
         </style>
-        <div style="padding: 1rem 0; animation: fadeIn 0.5s ease-out;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <span style="font-size: 2rem; line-height: 1;">{emoji}</span>
-                <div style="background: {color}1a; padding: 0.5rem 1.5rem; border-radius: 6px; border: 1px solid {color}40;">
-                    <span style="font-size: 2.5rem; color: {color}; font-weight: 700; letter-spacing: 0.05em; line-height: 1;">
-                        {status}
-                    </span>
-                </div>
+        <div style="text-align: center; max-width: 600px; margin: 2rem auto; padding: 1.5rem; background: rgba(30, 35, 45, 0.3); border-radius: 12px; animation: fadeIn 0.5s ease-out;">
+            <!-- Primera línea: emoji + status pill inline -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem; margin-right: 0.75rem;">{emoji}</span>
+                <span style="background: {color}26; color: {color}; padding: 0.5rem 1.5rem; border-radius: 8px; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 2px solid {color}40;">
+                    {status}
+                </span>
             </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; color: #ffffff; font-weight: 700; margin-bottom: 0.5rem;">
-                    {score}
-                </div>
-                <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
-                    {message}
-                </div>
+            <!-- Segunda línea: score centrado -->
+            <div style="font-size: 2.5rem; font-weight: 600; color: {color}; margin-bottom: 0.75rem;">
+                {score}
+            </div>
+            <!-- Tercera línea: mensaje descriptivo -->
+            <div style="color: #8b949e; font-size: 1rem; line-height: 1.5;">
+                {message}
             </div>
         </div>
         """
         
-        # Validate HTML before rendering
-        if _validate_html_tags(status_html):
-            st.markdown(status_html, unsafe_allow_html=True)
-        else:
-            st.error("Status rendering error - please refresh")
+        st.markdown(status_html, unsafe_allow_html=True)
         
-        # Historical Values section - SINGLE COLUMN VERTICAL (Fear & Greed style)
+        # Historical Values section - Native Streamlit components
+        # Color map for dynamic status colors
+        color_map = {
+            'Extreme Risk Off': '#ef4444',
+            'Risk Off': '#f97316',
+            'Neutral': '#eab308',
+            'Risk On': '#10b981',
+            'Extreme Risk On': '#22c55e'
+        }
+        
         try:
-            now_row = _render_history_row("Now", historical.get('now'))
-            yesterday_row = _render_history_row("Yesterday", historical.get('yesterday'))
-            week_row = _render_history_row("Last week", historical.get('last_week'))
-            month_row = _render_history_row("Last month", historical.get('last_month'))
-            
-            historical_html = f"""
-            <style>
-                @keyframes slideInUp {{
-                    from {{
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }}
-                    to {{
-                        opacity: 1;
-                        transform: translateY(0);
-                    }}
-                }}
-            </style>
-            <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; animation: slideInUp 0.4s ease-out;">
-                <div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">
-                    HISTORICAL VALUES
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    {now_row}
-                    {yesterday_row}
-                    {week_row}
-                    {month_row}
-                </div>
-            </div>
-            """
-            
-            # Validate HTML before rendering
-            if _validate_html_tags(historical_html):
-                st.markdown(historical_html, unsafe_allow_html=True)
-            else:
-                raise ValueError("HTML validation failed")
-                
-        except Exception as e:
+            st.markdown('<div style="margin-top: 1.5rem;"></div>', unsafe_allow_html=True)
             st.markdown(
-                """
-                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #161b22; border: 1px solid #30363d; border-radius: 6px; text-align: center;">
-                    <div style="color: #8b949e; font-size: 0.875rem; font-style: italic;">
-                        Historical data loading, please wait...
-                    </div>
-                </div>
-                """,
+                '<div style="color: #8b949e; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">HISTORICAL VALUES</div>',
                 unsafe_allow_html=True
             )
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                if historical.get('now'):
+                    now_data = historical['now']
+                    st.metric(label="Now", value=f"{now_data['score']}")
+                    status_color = color_map.get(now_data['status'], '#8b949e')
+                    st.markdown(
+                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{now_data["status"]}</span>',
+                        unsafe_allow_html=True
+                    )
+                
+                if historical.get('last_week'):
+                    week_data = historical['last_week']
+                    st.metric(label="Last week", value=f"{week_data['score']}")
+                    status_color = color_map.get(week_data['status'], '#8b949e')
+                    st.markdown(
+                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{week_data["status"]}</span>',
+                        unsafe_allow_html=True
+                    )
+            
+            with col2:
+                if historical.get('yesterday'):
+                    yesterday_data = historical['yesterday']
+                    st.metric(label="Yesterday", value=f"{yesterday_data['score']}")
+                    status_color = color_map.get(yesterday_data['status'], '#8b949e')
+                    st.markdown(
+                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{yesterday_data["status"]}</span>',
+                        unsafe_allow_html=True
+                    )
+                
+                if historical.get('last_month'):
+                    month_data = historical['last_month']
+                    st.metric(label="Last month", value=f"{month_data['score']}")
+                    status_color = color_map.get(month_data['status'], '#8b949e')
+                    st.markdown(
+                        f'<span style="color: {status_color}; font-size: 0.875rem; font-weight: 600;">{month_data["status"]}</span>',
+                        unsafe_allow_html=True
+                    )
+                
+        except Exception as e:
+            st.info('📊 Aggregating historical market data, please wait...')

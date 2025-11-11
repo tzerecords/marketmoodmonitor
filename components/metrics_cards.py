@@ -47,9 +47,9 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     Args:
         market_data: Complete market data from fetcher
     """
-    global_data = market_data.get("global_market", {})
-    btc_data = market_data.get("bitcoin", {})
-    top_movers = market_data.get("top_movers", [])
+    global_data = market_data.get("global_market") or {}
+    btc_data = market_data.get("bitcoin") or {}
+    top_movers = market_data.get("top_movers") or []
     
     # Extract values
     btc_dominance = global_data.get("btc_dominance", 0)
@@ -67,8 +67,8 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
-                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    BTC DOMINANCE
+                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Bitcoin market cap as percentage of total crypto market">
+                    BTC DOMINANCE ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {btc_dominance:.1f}%
@@ -90,8 +90,8 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
-                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    TOTAL MARKET CAP
+                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Combined market capitalization of all cryptocurrencies">
+                    TOTAL MARKET CAP ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {mcap_display}
@@ -105,8 +105,8 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
-                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    ALTCOIN SEASON
+                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Percentage of top 50 coins outperforming BTC in 24h">
+                    ALTCOIN SEASON ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {altcoin_season:.0f}%
@@ -120,8 +120,8 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
         st.markdown(
             f"""
             <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 1rem;">
-                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
-                    24H VOLUME
+                <div style="color: #8b949e; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; cursor: help;" title="Total trading volume across all crypto markets in last 24 hours">
+                    24H VOLUME ⓘ
                 </div>
                 <div style="color: #ffffff; font-size: 2rem; font-weight: 700; line-height: 1;">
                     {format_large_number(volume_24h)}
