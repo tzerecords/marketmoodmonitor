@@ -90,6 +90,55 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### November 11, 2025 (v2.5 - One-Pager Production-Ready)
+
+**Objetivo:** Dashboard ultra-compacto que cabe en pantalla 1080p sin scroll vertical, manteniendo profesionalismo institucional.
+
+**3 Fixes Implementados:**
+
+**FIX 1 - Historical Values Ultra Compacto:**
+- ✅ Grid simplificado: `120px auto 50px 130px` (eliminado div spacer)
+- ✅ Badges reducidos: 48px → **36px** con box-shadow sutil
+- ✅ Spacing compacto: padding **0.4rem**, margins reducidos (header 1rem top, 0.5rem bottom)
+- ✅ **Sin emojis laterales** - diseño más limpio y profesional
+- ✅ Max-width: 1000px → **900px** (previene ensanchamiento en desktop)
+- ✅ Label color mejorado: #8b949e → **#c9d1d9** (mejor contraste)
+- ✅ **Reducción de altura: ~50%** vs versión anterior
+
+**FIX 2 - Gauge Badge Pill Sutil:**
+- ✅ Position: y=0.35 → **y=0.25** (más bajo en gauge, evita overlap con ticks)
+- ✅ Size: 28px → **30px** (balance entre legibilidad y sutileza)
+- ✅ Background opacity: 0.04 → **0.03** (ultra discreto, casi invisible)
+- ✅ Borderpad: 8 → **14** (pill shape profesional)
+- ✅ **Borderradius: 24** agregado (esquinas redondeadas tipo pill)
+- ✅ Borderwidth: 1 → **1.5** (definición sutil del borde)
+- ✅ Text opacity: 0.5 → **0.6** (un poco más legible)
+
+**FIX 3 - Spacing Global Reducido:**
+- ✅ Después de Thermometer: **0.75rem** (mantiene aire entre hero y métricas)
+- ✅ Después de Metrics Cards: 0.5rem → **1.5rem** (espacio balanceado)
+- ✅ Después de Top Movers: **1.5rem** (separación consistente)
+- ✅ **Stack total: 0.75rem → 1.5rem → 1.5rem** (reducción ~40% vs v2.4)
+
+**Validación UI Critical:**
+- ✅ Dashboard cabe en 1080p sin scroll vertical
+- ✅ Grid no se ensancha en desktop >1400px (respeta max 900px)
+- ✅ Badges circulares exactamente 36x36px
+- ✅ Gauge badge con pill shape profesional
+- ✅ Zero regressions en funcionalidad existente
+- ✅ Estética one-pager: información densa pero legible
+
+**Technical Implementation:**
+- Modified `components/thermometer.py`: Historical Values compacto + Gauge badge pill
+- Modified `app.py`: Spacing global optimizado para one-pager
+- All changes architect-reviewed and approved
+
+**Design Philosophy:**
+- **Information Density First**: Máxima información en mínimo espacio vertical
+- **Professional Aesthetics**: Compacto no significa cramped - spacing intencional
+- **Grid Discipline**: Columns fijas previenen ensanchamiento inesperado
+- **One-Pager Goal**: Todo visible sin scroll en 1080p
+
 ### November 11, 2025 (v2.4 - Production-Ready Final Polish)
 
 **Validaciones Críticas Pre-Production:**
