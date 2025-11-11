@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-11T11:25:12.464444",
+  "timestamp": "2025-11-11T12:06:59.656627",
   "fear_greed": {
     "value": 26,
     "classification": "Fear",
@@ -15,28 +15,28 @@
     ]
   },
   "global_market": {
-    "total_market_cap_usd": 3637576512047.164,
-    "total_volume_24h_usd": 196707154827.2106,
-    "btc_dominance": 57.72790368460785,
-    "eth_dominance": 11.839926218693561,
+    "total_market_cap_usd": 3640852932159.819,
+    "total_volume_24h_usd": 196363507069.6118,
+    "btc_dominance": 57.73944977733972,
+    "eth_dominance": 11.858408816109044,
     "active_cryptocurrencies": 19412
   },
   "bitcoin": {
-    "price_usd": 105279,
-    "volume_24h_usd": 69514362932.62706,
-    "price_change_24h": -0.781047274885441
+    "price_usd": 105367,
+    "volume_24h_usd": 69434202445.05807,
+    "price_change_24h": -0.47829964461993046
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": 20.91889
+        "price_change_24h": 21.78269
       },
       {
-        "symbol": "TRUMP",
-        "name": "Official Trump",
-        "price_change_24h": 3.10553
+        "symbol": "BGB",
+        "name": "Bitget Token",
+        "price_change_24h": 1.8386
       },
       {
         "symbol": "FIGR_HELOC",
@@ -44,33 +44,33 @@
         "price_change_24h": 1.77701
       },
       {
-        "symbol": "SUSDS",
-        "name": "sUSDS",
-        "price_change_24h": 1.62456
+        "symbol": "TRX",
+        "name": "TRON",
+        "price_change_24h": 1.66566
       }
     ],
     "losers": [
       {
-        "symbol": "FIL",
-        "name": "Filecoin",
-        "price_change_24h": -8.76792
+        "symbol": "XMR",
+        "name": "Monero",
+        "price_change_24h": -9.53034
       },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -9.48856
+        "price_change_24h": -10.10887
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -22.44502
+        "price_change_24h": -24.90336
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -28.93665
+        "price_change_24h": -29.47128
       }
     ]
   },
-  "market_breadth": 30.0
+  "market_breadth": 20.0
 }
