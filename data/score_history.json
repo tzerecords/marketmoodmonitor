@@ -437,6 +437,30 @@
       "score": 37.1,
       "status": "Risk Off",
       "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-11T14:53:34.165327",
+      "score": 37.1,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-17T08:18:15.572103",
+      "score": 31.8,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-17T08:27:40.329000",
+      "score": 35.4,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-17T08:27:53.127049",
+      "score": 35.4,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
     }
   ]
 }

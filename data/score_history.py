@@ -59,7 +59,7 @@ def save_score(score: float, status: str, message: str):
 
 def get_historical_values() -> Dict[str, Optional[Dict[str, Any]]]:
     """
-    Get key historical score values.
+    Get key historical score values with sequential exclusion to avoid duplicates.
     
     Returns:
         Dict with keys: now, yesterday, last_week, last_month
@@ -74,37 +74,48 @@ def get_historical_values() -> Dict[str, Optional[Dict[str, Any]]]:
             'last_month': None
         }
     
-    now = datetime.now()
+    now_time = datetime.now()
+    used_entries = set()
     
-    # Get latest (now)
+    # Now: latest entry
     latest = history[-1] if history else None
+    if latest:
+        used_entries.add(latest['timestamp'])
     
-    # Find closest to 24h ago
+    # Yesterday: closest to 24h ago, excluding already used entries
     yesterday = None
     if len(history) > 1:
-        target_yesterday = now - timedelta(days=1)
-        yesterday = min(
-            history,
-            key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_yesterday)
-        )
+        target_yesterday = now_time - timedelta(days=1)
+        available = [h for h in history if h['timestamp'] not in used_entries]
+        if available:
+            yesterday = min(
+                available,
+                key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_yesterday)
+            )
+            used_entries.add(yesterday['timestamp'])
     
-    # Find closest to 7d ago
+    # Last week: closest to 7d ago, excluding already used entries
     last_week = None
     if len(history) > 1:
-        target_week = now - timedelta(days=7)
-        last_week = min(
-            history,
-            key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_week)
-        )
+        target_week = now_time - timedelta(days=7)
+        available = [h for h in history if h['timestamp'] not in used_entries]
+        if available:
+            last_week = min(
+                available,
+                key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_week)
+            )
+            used_entries.add(last_week['timestamp'])
     
-    # Find closest to 30d ago
+    # Last month: closest to 30d ago, excluding already used entries
     last_month = None
     if len(history) > 1:
-        target_month = now - timedelta(days=30)
-        last_month = min(
-            history,
-            key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_month)
-        )
+        target_month = now_time - timedelta(days=30)
+        available = [h for h in history if h['timestamp'] not in used_entries]
+        if available:
+            last_month = min(
+                available,
+                key=lambda h: abs(datetime.fromisoformat(h['timestamp']) - target_month)
+            )
     
     return {
         'now': latest,
