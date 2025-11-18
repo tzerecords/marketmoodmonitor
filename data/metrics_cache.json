@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-18T11:01:09.248659",
+  "timestamp": "2025-11-18T11:06:16.088347",
   "fear_greed": {
     "value": 11,
     "classification": "Extreme Fear",
@@ -15,62 +15,62 @@
     ]
   },
   "global_market": {
-    "total_market_cap_usd": 3208754984597.9043,
-    "total_volume_24h_usd": 258476937283.68503,
-    "btc_dominance": 56.72667966418469,
-    "eth_dominance": 11.482953976943355,
+    "total_market_cap_usd": 3215441639735.3813,
+    "total_volume_24h_usd": 259441291847.04034,
+    "btc_dominance": 56.742601782918065,
+    "eth_dominance": 11.492614228275656,
     "active_cryptocurrencies": 19412
   },
   "bitcoin": {
-    "price_usd": 91483,
-    "volume_24h_usd": 117801199844.74474,
-    "price_change_24h": -4.298206259921796
+    "price_usd": 91400,
+    "volume_24h_usd": 121748493111.1235,
+    "price_change_24h": -4.363631305923983
   },
   "top_movers": {
     "gainers": [
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": 15.17228
+        "price_change_24h": 15.30935
       },
       {
         "symbol": "HASH",
         "name": "Provenance Blockchain",
-        "price_change_24h": 9.51332
+        "price_change_24h": 9.5132
       },
       {
         "symbol": "ASTER",
         "name": "Aster",
-        "price_change_24h": 8.4249
+        "price_change_24h": 8.49494
       },
       {
         "symbol": "HYPE",
         "name": "Hyperliquid",
-        "price_change_24h": 5.76187
+        "price_change_24h": 5.96314
       }
     ],
     "losers": [
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": -8.70126
+        "price_change_24h": -8.70182
       },
       {
         "symbol": "MNT",
         "name": "Mantle",
-        "price_change_24h": -8.79011
+        "price_change_24h": -8.83566
       },
       {
         "symbol": "PUMP",
         "name": "Pump.fun",
-        "price_change_24h": -9.06048
+        "price_change_24h": -9.18608
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -13.74128
+        "price_change_24h": -13.84057
       }
     ]
   },
-  "market_breadth": 20.0
+  "market_breadth": 17.0
 }
