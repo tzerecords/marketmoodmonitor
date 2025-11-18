@@ -1,76 +1,76 @@
 {
-  "timestamp": "2025-11-17T08:27:39.823068",
+  "timestamp": "2025-11-18T11:01:09.248659",
   "fear_greed": {
-    "value": 14,
+    "value": 11,
     "classification": "Extreme Fear",
-    "timestamp": "1763337600",
+    "timestamp": "1763424000",
     "history_7d": [
+      11,
       14,
       10,
       10,
       16,
       15,
-      24,
-      26
+      24
     ]
   },
   "global_market": {
-    "total_market_cap_usd": 3339366828986.6797,
-    "total_volume_24h_usd": 179015480809.13565,
-    "btc_dominance": 57.19213067572494,
-    "eth_dominance": 11.569985198193326,
-    "active_cryptocurrencies": 19439
+    "total_market_cap_usd": 3208754984597.9043,
+    "total_volume_24h_usd": 258476937283.68503,
+    "btc_dominance": 56.72667966418469,
+    "eth_dominance": 11.482953976943355,
+    "active_cryptocurrencies": 19412
   },
   "bitcoin": {
-    "price_usd": 95909,
-    "volume_24h_usd": 78601511136.65501,
-    "price_change_24h": 0.06150127911234661
+    "price_usd": 91483,
+    "volume_24h_usd": 117801199844.74474,
+    "price_change_24h": -4.298206259921796
   },
   "top_movers": {
     "gainers": [
       {
+        "symbol": "ICP",
+        "name": "Internet Computer",
+        "price_change_24h": 15.17228
+      },
+      {
+        "symbol": "HASH",
+        "name": "Provenance Blockchain",
+        "price_change_24h": 9.51332
+      },
+      {
         "symbol": "ASTER",
         "name": "Aster",
-        "price_change_24h": 6.17237
+        "price_change_24h": 8.4249
       },
       {
-        "symbol": "ENA",
-        "name": "Ethena",
-        "price_change_24h": 2.45176
-      },
-      {
-        "symbol": "PI",
-        "name": "Pi Network",
-        "price_change_24h": 1.56753
-      },
-      {
-        "symbol": "UNI",
-        "name": "Uniswap",
-        "price_change_24h": 1.28208
+        "symbol": "HYPE",
+        "name": "Hyperliquid",
+        "price_change_24h": 5.76187
       }
     ],
     "losers": [
       {
-        "symbol": "ICP",
-        "name": "Internet Computer",
-        "price_change_24h": -5.50011
+        "symbol": "UNI",
+        "name": "Uniswap",
+        "price_change_24h": -8.70126
+      },
+      {
+        "symbol": "MNT",
+        "name": "Mantle",
+        "price_change_24h": -8.79011
       },
       {
         "symbol": "PUMP",
         "name": "Pump.fun",
-        "price_change_24h": -5.50691
+        "price_change_24h": -9.06048
       },
       {
-        "symbol": "NEAR",
-        "name": "NEAR Protocol",
-        "price_change_24h": -5.93188
-      },
-      {
-        "symbol": "XMR",
-        "name": "Monero",
-        "price_change_24h": -7.15222
+        "symbol": "ZEC",
+        "name": "Zcash",
+        "price_change_24h": -13.74128
       }
     ]
   },
-  "market_breadth": 19.0
+  "market_breadth": 20.0
 }
