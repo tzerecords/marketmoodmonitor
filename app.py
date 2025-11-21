@@ -145,16 +145,74 @@ def main():
         # Header controls with cache indicator
         render_header_controls(st.session_state.last_fetch_time, market_data.get("using_cache", False))
         
-        # Layout structure - Optimized spacing for 1080p no-scroll
-        # 1. Thermometer section (gauge + status + historical values) - margin-bottom: 1.25rem
-        render_thermometer(risk_score_data, st.session_state.last_fetch_time)
-        st.markdown('<div style="margin-bottom: 1.25rem;"></div>', unsafe_allow_html=True)
+        # Layout structure - 3-column grid inspired by reference design
+        # Grid: 2 cards left | Thermometer center | 2 cards right
+        st.markdown('<div style="margin-bottom: 1rem;"></div>', unsafe_allow_html=True)
         
-        # 2. Metrics cards (4 cards) - margin-bottom: 1.25rem
-        render_metrics_dashboard(market_data)
-        st.markdown('<div style="margin-bottom: 1.25rem;"></div>', unsafe_allow_html=True)
+        col_left, col_center, col_right = st.columns([1, 1.2, 1], gap="medium")
         
-        # 3. Top movers (horizontal single row) - margin-bottom: 1.5rem
+        # Extract metrics for manual rendering
+        global_data = market_data.get("global_market") or {}
+        btc_data = market_data.get("bitcoin") or {}
+        top_movers_data = market_data.get("top_movers") or {}
+        
+        btc_dominance = global_data.get("btc_dominance", 0)
+        total_mcap = global_data.get("total_market_cap_usd", 0)
+        volume_24h = global_data.get("total_volume_24h_usd", 0)
+        btc_change_24h = btc_data.get("price_change_24h", 0)
+        
+        # Calculate altcoin season (public function)
+        from components.metrics_cards import calculate_altcoin_season
+        altcoin_season = calculate_altcoin_season(top_movers_data, btc_change_24h)
+        
+        # Format market cap
+        if total_mcap > 1_000_000_000_000:
+            mcap_display = f"${total_mcap / 1_000_000_000_000:.1f}T"
+        elif total_mcap > 1_000_000_000:
+            mcap_display = f"${total_mcap / 1_000_000_000:.1f}B"
+        else:
+            mcap_display = f"${total_mcap / 1_000_000:.1f}M"
+        
+        from utils.helpers import format_large_number
+        
+        # LEFT COLUMN: BTC Dominance + Total Market Cap
+        from components.metric_card import render_metric_card
+        
+        with col_left:
+            render_metric_card(
+                label="BTC DOMINANCE",
+                value=f"{btc_dominance:.1f}%",
+                tooltip="Bitcoin market cap as percentage of total crypto market",
+                margin_bottom="1rem"
+            )
+            render_metric_card(
+                label="TOTAL MARKET CAP",
+                value=mcap_display,
+                tooltip="Combined market capitalization of all cryptocurrencies",
+                margin_bottom="0"
+            )
+        
+        # CENTER COLUMN: Thermometer (larger)
+        with col_center:
+            render_thermometer(risk_score_data, st.session_state.last_fetch_time)
+        
+        # RIGHT COLUMN: Altcoin Season + 24H Volume
+        with col_right:
+            render_metric_card(
+                label="ALTCOIN SEASON",
+                value=f"{altcoin_season:.1f}%",
+                tooltip="Percentage of top 100 coins outperforming BTC in 24h",
+                margin_bottom="1rem"
+            )
+            render_metric_card(
+                label="24H VOLUME",
+                value=format_large_number(volume_24h),
+                tooltip="Total trading volume across all crypto markets in last 24 hours",
+                margin_bottom="0"
+            )
+        
+        # BOTTOM: Top movers horizontal strip (full-width)
+        st.markdown('<div style="margin-top: 1.25rem;"></div>', unsafe_allow_html=True)
         if market_data.get("top_movers"):
             render_hot_tokens(market_data["top_movers"])
         st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)

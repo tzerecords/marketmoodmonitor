@@ -473,6 +473,42 @@
       "score": 35.0,
       "status": "Risk Off",
       "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-21T11:26:17.903896",
+      "score": 31.8,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-21T11:30:35.300940",
+      "score": 31.8,
+      "status": "Risk Off",
+      "message": "Cautious positioning - Defensive stance recommended"
+    },
+    {
+      "timestamp": "2025-11-21T11:32:23.206238",
+      "score": 26.4,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T11:32:39.473072",
+      "score": 26.4,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T11:34:40.479839",
+      "score": 26.2,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T11:36:41.990311",
+      "score": 26.8,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
     }
   ]
 }

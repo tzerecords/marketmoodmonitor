@@ -136,12 +136,15 @@ class MarketDataFetcher:
             "price_change_24h": btc_data.get("usd_24h_change", 0),
         }
     
-    def get_top_movers(self) -> Optional[Dict[str, List[Dict]]]:
+    def get_top_movers(self) -> Optional[Dict[str, Any]]:
         """
-        Get top gainers and losers (>100M market cap).
+        Get top gainers and losers (>100M market cap) + full top 100 for altcoin season.
         
         Returns:
-            Dict with 'gainers' and 'losers' lists
+            Dict with:
+            - 'gainers': Top gainers (filtered >100M mcap, for display)
+            - 'losers': Top losers (filtered >100M mcap, for display)
+            - 'all_coins_top100': UNFILTERED top 100 by mcap (for altcoin season calc)
         """
         params = {
             "vs_currency": "usd",
@@ -157,6 +160,19 @@ class MarketDataFetcher:
             logger.error("Invalid top movers response")
             return None
         
+        format_coin = lambda c: {
+            "symbol": c.get("symbol", "").upper(),
+            "name": c.get("name", ""),
+            "price_change_24h": c.get("price_change_percentage_24h", 0),
+        }
+        
+        # Store UNFILTERED top 100 for altcoin season (consistent denominator)
+        all_coins_top100 = [
+            format_coin(c) for c in data
+            if c.get("price_change_percentage_24h") is not None
+        ]
+        
+        # Filter for display movers (>100M mcap)
         filtered_coins = [
             coin for coin in data
             if coin.get("market_cap", 0) >= MIN_MARKET_CAP_FOR_MOVERS
@@ -172,15 +188,11 @@ class MarketDataFetcher:
         gainers = sorted_by_change[:TOP_MOVERS_COUNT // 2]
         losers = sorted_by_change[-TOP_MOVERS_COUNT // 2:]
         
-        format_coin = lambda c: {
-            "symbol": c.get("symbol", "").upper(),
-            "name": c.get("name", ""),
-            "price_change_24h": c.get("price_change_percentage_24h", 0),
-        }
-        
+        # Return display movers (filtered) + full top 100 (unfiltered) for altcoin season
         return {
             "gainers": [format_coin(c) for c in gainers],
             "losers": [format_coin(c) for c in losers],
+            "all_coins_top100": all_coins_top100,  # UNFILTERED top 100 for consistent calculation
         }
     
     def get_market_breadth(self) -> Optional[float]:

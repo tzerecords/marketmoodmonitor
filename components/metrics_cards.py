@@ -7,26 +7,29 @@ from typing import Dict, Any
 from utils.helpers import format_large_number, format_percentage
 
 
-def _calculate_altcoin_season(top_movers: Dict[str, Any], btc_change_24h: float) -> float:
+def calculate_altcoin_season(top_movers: Dict[str, Any], btc_change_24h: float) -> float:
     """
-    Calculate Altcoin Season Index: % of top 50 coins outperforming BTC.
+    Calculate Altcoin Season Index: % of top 100 coins outperforming BTC.
+    Public function for use in app.py layout. Handles degraded data gracefully.
     
     Args:
-        top_movers: Dict with 'gainers' and 'losers' lists
+        top_movers: Dict with 'all_coins_top100' list (UNFILTERED top 100 by mcap)
         btc_change_24h: Bitcoin 24h price change percentage
         
     Returns:
-        Percentage of coins beating BTC (0-100)
+        Percentage of coins beating BTC (0-100), or 0.0 if data unavailable
     """
     if not top_movers or not isinstance(top_movers, dict):
         return 0.0
     
-    # Combine gainers and losers into single list
-    gainers = top_movers.get("gainers", [])
-    losers = top_movers.get("losers", [])
-    all_coins = gainers + losers
+    # Use UNFILTERED top 100 for consistent denominator
+    # Fallback to empty list if key missing (degraded cache scenario)
+    all_coins = top_movers.get("all_coins_top100", [])
     
-    if not all_coins:
+    if not all_coins or not isinstance(all_coins, list):
+        # Log warning for debugging but return 0 gracefully
+        import logging
+        logging.getLogger(__name__).warning("Altcoin season: all_coins_top100 missing or invalid in data")
         return 0.0
     
     # Count coins with better performance than BTC
@@ -35,8 +38,8 @@ def _calculate_altcoin_season(top_movers: Dict[str, Any], btc_change_24h: float)
         if isinstance(coin, dict) and coin.get('price_change_24h', -999) > btc_change_24h
     )
     
-    # Use min of actual count vs 50 for percentage
-    total = min(len(all_coins), 50)
+    # Calculate over full top 100 (consistent, not variable)
+    total = len(all_coins)
     return (outperforming / total * 100) if total > 0 else 0.0
 
 
@@ -58,7 +61,7 @@ def render_metrics_dashboard(market_data: Dict[str, Any]):
     btc_change_24h = btc_data.get("price_change_24h", 0)
     
     # Calculate Altcoin Season Index
-    altcoin_season = _calculate_altcoin_season(top_movers, btc_change_24h)
+    altcoin_season = calculate_altcoin_season(top_movers, btc_change_24h)
     
     # Tight spacing: gap="medium" = 1rem
     col1, col2, col3, col4 = st.columns(4, gap="medium")
