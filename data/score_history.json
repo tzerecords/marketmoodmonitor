@@ -539,6 +539,30 @@
       "score": 23.5,
       "status": "Extreme Risk Off",
       "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T12:00:15.911951",
+      "score": 23.9,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T12:00:50.623275",
+      "score": 23.9,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T12:01:36.100091",
+      "score": 23.9,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T12:02:52.236968",
+      "score": 24.1,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
     }
   ]
 }
