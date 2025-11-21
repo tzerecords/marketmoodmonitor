@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-21T11:36:41.485488",
+  "timestamp": "2025-11-21T11:38:01.240314",
   "fear_greed": {
     "value": 14,
     "classification": "Extreme Fear",
@@ -22,110 +22,110 @@
     "active_cryptocurrencies": 19405
   },
   "bitcoin": {
-    "price_usd": 82843,
-    "volume_24h_usd": 129006062329.5169,
-    "price_change_24h": -9.461599015728767
+    "price_usd": 82739,
+    "volume_24h_usd": 129351285636.45898,
+    "price_change_24h": -9.61460343994313
   },
   "top_movers": {
     "gainers": [
       {
-        "symbol": "USDF",
-        "name": "Falcon USD",
-        "price_change_24h": 0.47415
-      },
-      {
         "symbol": "C1USD",
         "name": "Currency One USD",
-        "price_change_24h": 0.36602
+        "price_change_24h": 0.34421
+      },
+      {
+        "symbol": "USDF",
+        "name": "Falcon USD",
+        "price_change_24h": 0.33646
       },
       {
         "symbol": "SUSDS",
         "name": "sUSDS",
-        "price_change_24h": 0.099
+        "price_change_24h": 0.1176
       },
       {
         "symbol": "DAI",
         "name": "Dai",
-        "price_change_24h": 0.07016
+        "price_change_24h": 0.05898
       }
     ],
     "losers": [
       {
         "symbol": "APT",
         "name": "Aptos",
-        "price_change_24h": -17.13307
+        "price_change_24h": -17.19108
       },
       {
         "symbol": "NEAR",
         "name": "NEAR Protocol",
-        "price_change_24h": -17.98007
+        "price_change_24h": -18.17594
       },
       {
         "symbol": "HASH",
         "name": "Provenance Blockchain",
-        "price_change_24h": -19.93456
+        "price_change_24h": -19.87986
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -22.70072
+        "price_change_24h": -22.719
       }
     ],
     "all_coins_top100": [
       {
         "symbol": "BTC",
         "name": "Bitcoin",
-        "price_change_24h": -9.50399
+        "price_change_24h": -9.6426
       },
       {
         "symbol": "ETH",
         "name": "Ethereum",
-        "price_change_24h": -9.90234
+        "price_change_24h": -10.27964
       },
       {
         "symbol": "USDT",
         "name": "Tether",
-        "price_change_24h": -0.01232
+        "price_change_24h": -0.01982
       },
       {
         "symbol": "XRP",
         "name": "XRP",
-        "price_change_24h": -10.05094
+        "price_change_24h": -10.13815
       },
       {
         "symbol": "BNB",
         "name": "BNB",
-        "price_change_24h": -9.00896
+        "price_change_24h": -9.30137
       },
       {
         "symbol": "USDC",
         "name": "USDC",
-        "price_change_24h": -0.00051
+        "price_change_24h": -0.00103
       },
       {
         "symbol": "SOL",
         "name": "Solana",
-        "price_change_24h": -11.24577
+        "price_change_24h": -11.42052
       },
       {
         "symbol": "TRX",
         "name": "TRON",
-        "price_change_24h": -3.38155
+        "price_change_24h": -3.40757
       },
       {
         "symbol": "STETH",
         "name": "Lido Staked Ether",
-        "price_change_24h": -9.80141
+        "price_change_24h": -10.24755
       },
       {
         "symbol": "DOGE",
         "name": "Dogecoin",
-        "price_change_24h": -12.09849
+        "price_change_24h": -12.23433
       },
       {
         "symbol": "ADA",
         "name": "Cardano",
-        "price_change_24h": -12.76778
+        "price_change_24h": -12.82268
       },
       {
         "symbol": "FIGR_HELOC",
@@ -140,212 +140,212 @@
       {
         "symbol": "WSTETH",
         "name": "Wrapped stETH",
-        "price_change_24h": -9.81201
+        "price_change_24h": -9.93378
       },
       {
         "symbol": "WBTC",
         "name": "Wrapped Bitcoin",
-        "price_change_24h": -9.53045
+        "price_change_24h": -9.68431
       },
       {
         "symbol": "ZEC",
         "name": "Zcash",
-        "price_change_24h": -7.93949
+        "price_change_24h": -8.6854
       },
       {
         "symbol": "WBETH",
         "name": "Wrapped Beacon ETH",
-        "price_change_24h": -9.94429
+        "price_change_24h": -10.24647
       },
       {
         "symbol": "BCH",
         "name": "Bitcoin Cash",
-        "price_change_24h": -7.79295
+        "price_change_24h": -8.30764
       },
       {
         "symbol": "USDS",
         "name": "USDS",
-        "price_change_24h": 0.04325
+        "price_change_24h": 0.00187
       },
       {
         "symbol": "BSC-USD",
         "name": "Binance Bridged USDT (BNB Smart Chain)",
-        "price_change_24h": -0.0252
+        "price_change_24h": -0.05171
       },
       {
         "symbol": "HYPE",
         "name": "Hyperliquid",
-        "price_change_24h": -15.53
+        "price_change_24h": -15.88941
       },
       {
         "symbol": "LEO",
         "name": "LEO Token",
-        "price_change_24h": -3.27598
+        "price_change_24h": -3.2443
       },
       {
         "symbol": "LINK",
         "name": "Chainlink",
-        "price_change_24h": -11.34734
+        "price_change_24h": -11.46164
       },
       {
         "symbol": "USDE",
         "name": "Ethena USDe",
-        "price_change_24h": 0.00777
+        "price_change_24h": -0.08064
       },
       {
         "symbol": "XLM",
         "name": "Stellar",
-        "price_change_24h": -10.73512
+        "price_change_24h": -10.81206
       },
       {
         "symbol": "WETH",
         "name": "WETH",
-        "price_change_24h": -9.6686
+        "price_change_24h": -9.83693
       },
       {
         "symbol": "WEETH",
         "name": "Wrapped eETH",
-        "price_change_24h": -9.69991
+        "price_change_24h": -9.89849
       },
       {
         "symbol": "LTC",
         "name": "Litecoin",
-        "price_change_24h": -10.20439
+        "price_change_24h": -10.29724
       },
       {
         "symbol": "CBBTC",
         "name": "Coinbase Wrapped BTC",
-        "price_change_24h": -9.50602
+        "price_change_24h": -9.51771
       },
       {
         "symbol": "XMR",
         "name": "Monero",
-        "price_change_24h": -11.00441
+        "price_change_24h": -11.2015
       },
       {
         "symbol": "AVAX",
         "name": "Avalanche",
-        "price_change_24h": -8.53898
+        "price_change_24h": -8.6841
       },
       {
         "symbol": "HBAR",
         "name": "Hedera",
-        "price_change_24h": -11.79977
+        "price_change_24h": -11.88079
       },
       {
         "symbol": "SUI",
         "name": "Sui",
-        "price_change_24h": -16.93378
+        "price_change_24h": -17.04831
       },
       {
         "symbol": "SHIB",
         "name": "Shiba Inu",
-        "price_change_24h": -9.91417
+        "price_change_24h": -9.96698
       },
       {
         "symbol": "DAI",
         "name": "Dai",
-        "price_change_24h": 0.07016
+        "price_change_24h": 0.05898
       },
       {
         "symbol": "SUSDE",
         "name": "Ethena Staked USDe",
-        "price_change_24h": -0.01363
+        "price_change_24h": -0.01795
       },
       {
         "symbol": "UNI",
         "name": "Uniswap",
-        "price_change_24h": -13.9878
+        "price_change_24h": -14.13172
       },
       {
         "symbol": "DOT",
         "name": "Polkadot",
-        "price_change_24h": -13.48741
+        "price_change_24h": -13.59899
       },
       {
         "symbol": "USDT0",
         "name": "USDT0",
-        "price_change_24h": -0.00656
+        "price_change_24h": 0.01995
       },
       {
         "symbol": "TON",
         "name": "Toncoin",
-        "price_change_24h": -11.83391
+        "price_change_24h": -12.04977
       },
       {
         "symbol": "SUSDS",
         "name": "sUSDS",
-        "price_change_24h": 0.099
+        "price_change_24h": 0.1176
       },
       {
         "symbol": "PYUSD",
         "name": "PayPal USD",
-        "price_change_24h": 0.04252
+        "price_change_24h": 0.00645
       },
       {
         "symbol": "CRO",
         "name": "Cronos",
-        "price_change_24h": -11.45841
+        "price_change_24h": -11.6566
       },
       {
         "symbol": "M",
         "name": "MemeCore",
-        "price_change_24h": -4.82747
+        "price_change_24h": -4.76928
       },
       {
         "symbol": "WLFI",
         "name": "World Liberty Financial",
-        "price_change_24h": -15.11778
+        "price_change_24h": -15.16574
       },
       {
         "symbol": "MNT",
         "name": "Mantle",
-        "price_change_24h": -16.13967
+        "price_change_24h": -16.53572
       },
       {
         "symbol": "USD1",
         "name": "USD1",
-        "price_change_24h": 0.02888
+        "price_change_24h": -0.00587
       },
       {
         "symbol": "TAO",
         "name": "Bittensor",
-        "price_change_24h": -16.30197
+        "price_change_24h": -16.69483
       },
       {
         "symbol": "CC",
         "name": "Canton",
-        "price_change_24h": -22.70072
+        "price_change_24h": -22.719
       },
       {
         "symbol": "C1USD",
         "name": "Currency One USD",
-        "price_change_24h": 0.36602
+        "price_change_24h": 0.34421
       },
       {
         "symbol": "NEAR",
         "name": "NEAR Protocol",
-        "price_change_24h": -17.98007
+        "price_change_24h": -18.17594
       },
       {
         "symbol": "BGB",
         "name": "Bitget Token",
-        "price_change_24h": -7.71616
+        "price_change_24h": -7.7712
       },
       {
         "symbol": "AAVE",
         "name": "Aave",
-        "price_change_24h": -12.35508
+        "price_change_24h": -12.52471
       },
       {
         "symbol": "ASTER",
         "name": "Aster",
-        "price_change_24h": -11.0873
+        "price_change_24h": -11.18831
       },
       {
         "symbol": "ICP",
         "name": "Internet Computer",
-        "price_change_24h": -15.10813
+        "price_change_24h": -15.32125
       },
       {
         "symbol": "BUIDL",
@@ -355,142 +355,142 @@
       {
         "symbol": "USDF",
         "name": "Falcon USD",
-        "price_change_24h": 0.47415
+        "price_change_24h": 0.33646
       },
       {
         "symbol": "XAUT",
         "name": "Tether Gold",
-        "price_change_24h": -0.40612
+        "price_change_24h": -0.40274
       },
       {
         "symbol": "OKB",
         "name": "OKB",
-        "price_change_24h": -11.72998
+        "price_change_24h": -12.08026
       },
       {
         "symbol": "ETC",
         "name": "Ethereum Classic",
-        "price_change_24h": -7.85553
+        "price_change_24h": -7.89631
       },
       {
         "symbol": "PI",
         "name": "Pi Network",
-        "price_change_24h": -4.84423
+        "price_change_24h": -5.35537
       },
       {
         "symbol": "APT",
         "name": "Aptos",
-        "price_change_24h": -17.13307
+        "price_change_24h": -17.19108
       },
       {
         "symbol": "JLP",
         "name": "Jupiter Perpetuals Liquidity Provider Token",
-        "price_change_24h": -6.61113
+        "price_change_24h": -6.65652
       },
       {
         "symbol": "JITOSOL",
         "name": "Jito Staked SOL",
-        "price_change_24h": -11.24527
+        "price_change_24h": -11.2515
       },
       {
         "symbol": "PEPE",
         "name": "Pepe",
-        "price_change_24h": -13.58834
+        "price_change_24h": -13.73992
       },
       {
         "symbol": "ENA",
         "name": "Ethena",
-        "price_change_24h": -15.10541
+        "price_change_24h": -15.16294
       },
       {
         "symbol": "WETH",
         "name": "Binance-Peg WETH",
-        "price_change_24h": -9.75892
+        "price_change_24h": -10.00602
       },
       {
         "symbol": "SOL",
         "name": "Wrapped SOL",
-        "price_change_24h": -11.33185
+        "price_change_24h": -11.40715
       },
       {
         "symbol": "HTX",
         "name": "HTX DAO",
-        "price_change_24h": -3.11937
+        "price_change_24h": -3.11866
       },
       {
         "symbol": "PUMP",
         "name": "Pump.fun",
-        "price_change_24h": -15.00579
+        "price_change_24h": -15.21378
       },
       {
         "symbol": "KCS",
         "name": "KuCoin",
-        "price_change_24h": -5.43666
+        "price_change_24h": -5.53084
       },
       {
         "symbol": "ONDO",
         "name": "Ondo",
-        "price_change_24h": -14.10172
+        "price_change_24h": -14.23509
       },
       {
         "symbol": "WLD",
         "name": "Worldcoin",
-        "price_change_24h": -13.52249
+        "price_change_24h": -13.51928
       },
       {
         "symbol": "POL",
         "name": "POL (ex-MATIC)",
-        "price_change_24h": -10.1646
+        "price_change_24h": -10.28206
       },
       {
         "symbol": "PAXG",
         "name": "PAX Gold",
-        "price_change_24h": -0.47308
+        "price_change_24h": -0.51539
       },
       {
         "symbol": "USDTB",
         "name": "USDtb",
-        "price_change_24h": 0.0213
+        "price_change_24h": 0.02107
       },
       {
         "symbol": "BFUSD",
         "name": "BFUSD",
-        "price_change_24h": -0.02965
+        "price_change_24h": -0.03039
       },
       {
         "symbol": "SYRUPUSDC",
         "name": "syrupUSDC",
-        "price_change_24h": 0.01793
+        "price_change_24h": 0.01817
       },
       {
         "symbol": "USDC",
         "name": "Binance Bridged USDC (BNB Smart Chain)",
-        "price_change_24h": -0.01344
+        "price_change_24h": -0.01427
       },
       {
         "symbol": "TRUMP",
         "name": "Official Trump",
-        "price_change_24h": -8.34207
+        "price_change_24h": -8.38636
       },
       {
         "symbol": "HASH",
         "name": "Provenance Blockchain",
-        "price_change_24h": -19.93456
+        "price_change_24h": -19.87986
       },
       {
         "symbol": "ATOM",
         "name": "Cosmos Hub",
-        "price_change_24h": -14.87511
+        "price_change_24h": -14.96295
       },
       {
         "symbol": "USDG",
         "name": "Global Dollar",
-        "price_change_24h": -0.00803
+        "price_change_24h": -0.00781
       },
       {
         "symbol": "ALGO",
         "name": "Algorand",
-        "price_change_24h": -10.3978
+        "price_change_24h": -10.63632
       },
       {
         "symbol": "USYC",
@@ -500,79 +500,79 @@
       {
         "symbol": "SYRUPUSDT",
         "name": "syrupUSDT",
-        "price_change_24h": -0.13451
+        "price_change_24h": -0.13448
       },
       {
         "symbol": "RETH",
         "name": "Rocket Pool ETH",
-        "price_change_24h": -9.83151
+        "price_change_24h": -9.92883
       },
       {
         "symbol": "FIL",
         "name": "Filecoin",
-        "price_change_24h": -13.60655
+        "price_change_24h": -13.75195
       },
       {
         "symbol": "RLUSD",
         "name": "Ripple USD",
-        "price_change_24h": -0.00403
+        "price_change_24h": -0.00551
       },
       {
         "symbol": "GT",
         "name": "Gate",
-        "price_change_24h": -8.83529
+        "price_change_24h": -8.8194
       },
       {
         "symbol": "WBNB",
         "name": "Wrapped BNB",
-        "price_change_24h": -8.91511
+        "price_change_24h": -9.17117
       },
       {
         "symbol": "ARB",
         "name": "Arbitrum",
-        "price_change_24h": -14.46339
+        "price_change_24h": -14.63445
       },
       {
         "symbol": "BNSOL",
         "name": "Binance Staked SOL",
-        "price_change_24h": -11.12601
+        "price_change_24h": -11.57084
       },
       {
         "symbol": "VET",
         "name": "VeChain",
-        "price_change_24h": -11.29119
+        "price_change_24h": -11.22408
       },
       {
         "symbol": "KHYPE",
         "name": "Kinetiq Staked HYPE",
-        "price_change_24h": -15.51666
+        "price_change_24h": -15.5109
       },
       {
         "symbol": "QNT",
         "name": "Quant",
-        "price_change_24h": -7.60025
-      },
-      {
-        "symbol": "SKY",
-        "name": "Sky",
-        "price_change_24h": -7.5304
+        "price_change_24h": -7.66228
       },
       {
         "symbol": "STRK",
         "name": "Starknet",
-        "price_change_24h": -7.73458
+        "price_change_24h": -8.67981
+      },
+      {
+        "symbol": "SKY",
+        "name": "Sky",
+        "price_change_24h": -7.49144
       },
       {
         "symbol": "KAS",
         "name": "Kaspa",
-        "price_change_24h": -11.64053
+        "price_change_24h": -11.71969
       },
       {
         "symbol": "FBTC",
         "name": "Function FBTC",
-        "price_change_24h": -9.58195
+        "price_change_24h": -9.51774
       }
     ]
   },
-  "market_breadth": 11.0
+  "market_breadth": 10.0
 }

@@ -509,6 +509,12 @@
       "score": 26.8,
       "status": "Extreme Risk Off",
       "message": "Protect capital mode - Market showing extreme weakness"
+    },
+    {
+      "timestamp": "2025-11-21T11:38:01.749920",
+      "score": 26.6,
+      "status": "Extreme Risk Off",
+      "message": "Protect capital mode - Market showing extreme weakness"
     }
   ]
 }
