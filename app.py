@@ -145,123 +145,16 @@ def main():
         # Header controls with cache indicator
         render_header_controls(st.session_state.last_fetch_time, market_data.get("using_cache", False))
         
-        # Layout structure - 3-column grid with precise specifications
-        # LEFT: 4 metric cards (260px) | CENTER: Hero gauge (flex) | RIGHT: Historical timeline (300px)
-        # Max-width container for centering
-        st.markdown(
-            """
-            <div class="dashboard-container" style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
-            """,
-            unsafe_allow_html=True
-        )
+        # Layout structure - Optimized spacing for 1080p no-scroll
+        # 1. Thermometer section (gauge + status + historical values) - margin-bottom: 1.25rem
+        render_thermometer(risk_score_data, st.session_state.last_fetch_time)
+        st.markdown('<div style="margin-bottom: 1.25rem;"></div>', unsafe_allow_html=True)
         
-        # Scoped CSS for main grid only (not affecting header/footer)
-        st.markdown(
-            """
-            <style>
-            /* Desktop layout - fixed widths for precise design */
-            @media (min-width: 1024px) {
-                .dashboard-container div[data-testid="column"] {
-                    padding: 0 14px;
-                }
-                .dashboard-container div[data-testid="column"]:first-child {
-                    padding-left: 0;
-                    flex: 0 0 260px !important;
-                    max-width: 260px;
-                }
-                .dashboard-container div[data-testid="column"]:nth-child(2) {
-                    flex: 1 1 auto !important;
-                }
-                .dashboard-container div[data-testid="column"]:last-child {
-                    padding-right: 0;
-                    flex: 0 0 300px !important;
-                    max-width: 300px;
-                }
-            }
-            
-            /* Mobile layout - stack vertically */
-            @media (max-width: 1023px) {
-                .dashboard-container div[data-testid="column"] {
-                    flex: 0 0 100% !important;
-                    max-width: 100% !important;
-                    margin-bottom: 1.5rem;
-                }
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+        # 2. Metrics cards (4 cards) - margin-bottom: 1.25rem
+        render_metrics_dashboard(market_data)
+        st.markdown('<div style="margin-bottom: 1.25rem;"></div>', unsafe_allow_html=True)
         
-        st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
-        
-        col_left, col_center, col_right = st.columns([260, 1, 300])
-        
-        # Extract metrics for rendering
-        global_data = market_data.get("global_market") or {}
-        btc_data = market_data.get("bitcoin") or {}
-        top_movers_data = market_data.get("top_movers") or {}
-        
-        btc_dominance = global_data.get("btc_dominance", 0)
-        total_mcap = global_data.get("total_market_cap_usd", 0)
-        volume_24h = global_data.get("total_volume_24h_usd", 0)
-        btc_change_24h = btc_data.get("price_change_24h", 0)
-        
-        # Calculate altcoin season
-        from components.metrics_cards import calculate_altcoin_season
-        altcoin_season = calculate_altcoin_season(top_movers_data, btc_change_24h)
-        
-        # Format market cap
-        if total_mcap > 1_000_000_000_000:
-            mcap_display = f"${total_mcap / 1_000_000_000_000:.1f}T"
-        elif total_mcap > 1_000_000_000:
-            mcap_display = f"${total_mcap / 1_000_000_000:.1f}B"
-        else:
-            mcap_display = f"${total_mcap / 1_000_000:.1f}M"
-        
-        from utils.helpers import format_large_number
-        from components.metric_card import render_metric_card
-        from components.thermometer import render_historical_timeline
-        
-        # LEFT COLUMN: 4 metric cards stacked with 16px gap
-        with col_left:
-            render_metric_card(
-                label="BTC DOMINANCE",
-                value=f"{btc_dominance:.1f}%",
-                tooltip="Bitcoin market cap as percentage of total crypto market",
-                margin_bottom="16px"
-            )
-            render_metric_card(
-                label="TOTAL MARKET CAP",
-                value=mcap_display,
-                tooltip="Combined market capitalization of all cryptocurrencies",
-                margin_bottom="16px"
-            )
-            render_metric_card(
-                label="ALTCOIN SEASON",
-                value=f"{altcoin_season:.1f}%",
-                tooltip="Percentage of top 100 coins outperforming BTC in 24h",
-                margin_bottom="16px"
-            )
-            render_metric_card(
-                label="24H VOLUME",
-                value=format_large_number(volume_24h),
-                tooltip="Total trading volume across all crypto markets in last 24 hours",
-                margin_bottom="0"
-            )
-        
-        # CENTER COLUMN: Hero gauge only
-        with col_center:
-            render_thermometer(risk_score_data, st.session_state.last_fetch_time)
-        
-        # RIGHT COLUMN: Historical timeline only
-        with col_right:
-            render_historical_timeline(risk_score_data)
-        
-        # Close max-width container
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # BOTTOM: Top movers horizontal strip (full-width)
-        st.markdown('<div style="margin-top: 1.25rem;"></div>', unsafe_allow_html=True)
+        # 3. Top movers (horizontal single row) - margin-bottom: 1.5rem
         if market_data.get("top_movers"):
             render_hot_tokens(market_data["top_movers"])
         st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)

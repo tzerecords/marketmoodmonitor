@@ -7,7 +7,7 @@ import logging
 import random
 from datetime import datetime, timedelta
 
-from utils.config import RISK_SCORE_WEIGHTS, RISK_SCORE_THRESHOLDS, BTC_MOMENTUM_THRESHOLDS, VOLUME_HEALTH_THRESHOLDS
+from utils.config import RISK_SCORE_WEIGHTS, RISK_SCORE_THRESHOLDS
 from utils.helpers import normalize_to_100
 from data.score_history import save_score
 
@@ -24,7 +24,7 @@ class RiskScoreCalculator:
     def calculate_btc_momentum(self, btc_price: float, price_change_24h: float) -> float:
         """
         Calculate BTC momentum indicator using rate of change.
-        Uses configurable thresholds from utils.config for maintainability.
+        For MVP, we use 24h change as proxy since we don't have historical MA data.
         
         Args:
             btc_price: Current BTC price
@@ -33,13 +33,22 @@ class RiskScoreCalculator:
         Returns:
             Normalized momentum score (0-100)
         """
-        # Use config thresholds for easy tuning
-        momentum = BTC_MOMENTUM_THRESHOLDS[-1]["score"]  # Default to lowest
-        
-        for threshold in BTC_MOMENTUM_THRESHOLDS:
-            if price_change_24h > threshold["min_change"]:
-                momentum = threshold["score"]
-                break
+        if price_change_24h > 10:
+            momentum = 90
+        elif price_change_24h > 5:
+            momentum = 75
+        elif price_change_24h > 2:
+            momentum = 65
+        elif price_change_24h > 0:
+            momentum = 55
+        elif price_change_24h > -2:
+            momentum = 45
+        elif price_change_24h > -5:
+            momentum = 35
+        elif price_change_24h > -10:
+            momentum = 25
+        else:
+            momentum = 10
         
         logger.info(f"BTC momentum calculated: {momentum} (based on {price_change_24h:.2f}% change)")
         return momentum
@@ -47,7 +56,7 @@ class RiskScoreCalculator:
     def calculate_volume_health(self, current_volume: float, market_data: Dict) -> float:
         """
         Calculate volume health metric.
-        Uses configurable thresholds from utils.config for maintainability.
+        For MVP, we compare against a reasonable baseline.
         
         Args:
             current_volume: Current 24h volume
@@ -59,13 +68,16 @@ class RiskScoreCalculator:
         total_market_cap = market_data.get("total_market_cap_usd", 1)
         volume_to_mcap_ratio = (current_volume / total_market_cap * 100) if total_market_cap > 0 else 0
         
-        # Use config thresholds for easy tuning
-        volume_health = VOLUME_HEALTH_THRESHOLDS[-1]["score"]  # Default to lowest
-        
-        for threshold in VOLUME_HEALTH_THRESHOLDS:
-            if volume_to_mcap_ratio > threshold["min_ratio"]:
-                volume_health = threshold["score"]
-                break
+        if volume_to_mcap_ratio > 8:
+            volume_health = 95
+        elif volume_to_mcap_ratio > 6:
+            volume_health = 80
+        elif volume_to_mcap_ratio > 4:
+            volume_health = 65
+        elif volume_to_mcap_ratio > 2:
+            volume_health = 50
+        else:
+            volume_health = 35
         
         logger.info(f"Volume health calculated: {volume_health} (ratio: {volume_to_mcap_ratio:.2f}%)")
         return volume_health
